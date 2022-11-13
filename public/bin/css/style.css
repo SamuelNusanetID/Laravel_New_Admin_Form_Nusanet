@@ -1,0 +1,26 @@
+body {
+    color: #000;
+    overflow-x: hidden;
+    height: 100vh;
+    background-image: linear-gradient(to right, #00a336, #2e4b91);
+    background-repeat: no-repeat;
+}
+
+.wrapper-image {
+    width: 100px;
+    height: 100px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 50%;
+    animation: fadeIn 3s ease;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
