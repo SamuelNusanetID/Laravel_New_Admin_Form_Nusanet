@@ -21,6 +21,7 @@ class UserLevel
                 return $next($request);
             }
         }
-        abort(401, 'Akses tidak diizinkan');
+
+        return redirect()->to('/')->with('errorMessage', 'Akses tidak diizinkan!');
     }
 }
