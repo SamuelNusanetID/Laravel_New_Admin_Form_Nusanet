@@ -2,8 +2,8 @@
     <!-- Brand Logo -->
     <a href="{{ URL::to('dashboard') }}" class="brand-link">
         <img src="{{ URL::to('bin/img/0DaWevkh_400x400-removebg-preview.png') }}" alt="PT.MAN Logo"
-            class="brand-image me-3" style="opacity: .8; animation: fadeIn 3s ease;">
-        <span class="brand-text fw-bold h6" style="animation: fadeIn 3s ease;">PT. Media Antar Nusa</span>
+            class="brand-image me-3" style="opacity: .8;">
+        <span class="brand-text fw-bold h6">PT. Media Antar Nusa</span>
     </a>
 
     <!-- Sidebar -->
@@ -11,7 +11,8 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="https://is.nusa.net.id/empPhoto/FHlDVX.jpeg" class="img-circle elevation-2" alt="User Image">
+                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    class="img-circle elevation-2" alt="User Image" style="height: 2em; width: 2em;">
             </div>
             <div class="info">
                 <a href="#"

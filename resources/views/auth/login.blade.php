@@ -116,7 +116,6 @@
             </button>
         </div>
 
-        <p class="text-center text-success">Belum memiliki akun? Klik <a href="{{ URL::to('register') }}">disini</a> untuk
-            mendaftar</p>
+        <p class="text-center text-success">Tidak memiliki akun? <a href="{{ URL::to('register') }}">Daftar</a></p>
     </form>
 @endsection

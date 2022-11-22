@@ -36,77 +36,233 @@
                                     <i class="fas fa-info-circle me-1"></i>
                                     Informasi Data Pelanggan
                                 </h3>
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-bordered table-striped" id="dataPelangganDataTable">
-                                    <thead class="bg-success">
-                                        <tr>
-                                            <th class="align-middle text-center">No.</th>
-                                            <th class="align-middle text-center">ID Pelanggan</th>
-                                            <th class="align-middle text-center">Nama Pelanggan</th>
-                                            <th class="align-middle text-center">Tipe Pelanggan</th>
-                                            <th class="align-middle text-center">PIC Sales</th>
-                                            <th class="align-middle text-center"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $i = 1;
-                                        @endphp
-                                        @foreach ($dataPelanggan as $pelanggan)
-                                            <tr>
-                                                <td class="align-middle text-center">{{ $i }}</td>
-                                                <td class="align-middle text-center">{{ $pelanggan->customer_id }}</td>
-                                                <td class="align-middle">{{ $pelanggan->name }}</td>
-                                                <td class="align-middle text-center">{{ $pelanggan->class }}</td>
-                                                <td class="align-middle">
-                                                    @if ($pelanggan->sales_id != null)
-                                                        <ol>
-                                                            <li>
-                                                                <span class="fw-bold">ID Sales :</span>
-                                                                {{ $pelanggan->sales_id }}
-                                                            </li>
-                                                            <li>
-                                                                <span class="fw-bold">Nama Sales :</span>
-                                                                {{ $pelanggan->sales_name }}
-                                                            </li>
-                                                        </ol>
-                                                    @else
-                                                        <p class="text-center p-0 m-0">-</p>
-                                                    @endif
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                                        <button type="button" class="btn btn-primary"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#pelanggan{{ $pelanggan->id }}Modal">
-                                                            <i class="fas fa-eye"></i>
-                                                        </button>
-                                                        @include('Admin.Pages.data-pelanggan.modals.detailpelanggan')
-
-                                                        <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
-                                                            class="btn btn-warning">
-                                                            <i class="fas fa-edit text-white"></i>
-                                                        </a>
-
-                                                        <form class="btn btn-danger"
-                                                            action="{{ URL::to('data-pelanggan/' . $pelanggan->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn p-0 m-0">
-                                                                <i class="fas fa-trash-alt text-white"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                @php
+                                    $class = ['Personal', 'Bussiness'];
+                                    $idxNav = 0;
+                                    $idxCont = 0;
+                                @endphp
+                                <div class="card-tools">
+                                    <ul class="nav nav-pills bg-white rounded" id="pills-tab" role="tablist">
+                                        @foreach ($class as $cls)
+                                            @if ($idxNav == 0)
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link active" id="pills-{{ $cls }}-tab"
+                                                        data-bs-toggle="pill" data-bs-target="#pills-{{ $cls }}"
+                                                        type="button" role="tab"
+                                                        aria-controls="pills-{{ $cls }}"
+                                                        aria-selected="true">{{ $cls }}</button>
+                                                </li>
+                                            @else
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link" id="pills-{{ $cls }}-tab"
+                                                        data-bs-toggle="pill" data-bs-target="#pills-{{ $cls }}"
+                                                        type="button" role="tab"
+                                                        aria-controls="pills-{{ $cls }}"
+                                                        aria-selected="true">{{ $cls }}</button>
+                                                </li>
+                                            @endif
                                             @php
-                                                $i++;
+                                                $idxNav++;
                                             @endphp
                                         @endforeach
-                                    </tbody>
-                                </table>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @if (session()->has('successMessage'))
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{ session('successMessage') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                    </div>
+                                @endif
+
+                                <div class="tab-content" id="pills-tabContent">
+                                    @foreach ($class as $cls)
+                                        @if ($idxCont == 0)
+                                            <div class="tab-pane fade show active" id="pills-{{ $cls }}"
+                                                role="tabpanel" aria-labelledby="pills-{{ $cls }}-tab"
+                                                tabindex="0">
+                                                <table class="table table-bordered table-striped"
+                                                    id="dataPelangganDataTable-{{ $cls }}" style="width: 100%;">
+                                                    <thead class="bg-success">
+                                                        <tr>
+                                                            <th class="align-middle text-center">No.</th>
+                                                            <th class="align-middle text-center">ID Pelanggan</th>
+                                                            <th class="align-middle text-center">Nama Pelanggan</th>
+                                                            <th class="align-middle text-center">PIC Sales</th>
+                                                            <th class="align-middle text-center"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @php
+                                                            $i = 1;
+                                                        @endphp
+                                                        @foreach ($dataPelanggan as $pelanggan)
+                                                            @if ($pelanggan->class == $cls)
+                                                                <tr>
+                                                                    <td class="align-middle text-center">
+                                                                        {{ $i }}</td>
+                                                                    <td class="align-middle text-center">
+                                                                        {{ $pelanggan->customer_id }}</td>
+                                                                    <td class="align-middle">{{ $pelanggan->name }}</td>
+                                                                    <td class="align-middle">
+                                                                        @if ($pelanggan->sales_id != null)
+                                                                            <ol>
+                                                                                <li>
+                                                                                    <span class="fw-bold">ID Sales :</span>
+                                                                                    {{ $pelanggan->sales_id }}
+                                                                                </li>
+                                                                                <li>
+                                                                                    <span class="fw-bold">Nama Sales
+                                                                                        :</span>
+                                                                                    {{ $pelanggan->sales_name }}
+                                                                                </li>
+                                                                            </ol>
+                                                                        @else
+                                                                            <p class="text-center p-0 m-0">-</p>
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="align-middle text-center">
+                                                                        <div class="btn-group" role="group"
+                                                                            aria-label="Basic example">
+                                                                            <button type="button" class="btn btn-primary"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#pelanggan{{ $pelanggan->id }}Modal">
+                                                                                <i class="fas fa-eye"></i>
+                                                                            </button>
+                                                                            @include('Admin.Pages.data-pelanggan.modals.' .
+                                                                                    $cls .
+                                                                                    '.layouts.index')
+                                                                            @can('AuthMaster')
+                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
+                                                                                    class="btn btn-warning">
+                                                                                    <i class="fas fa-edit text-white"></i>
+                                                                                </a>
+                                                                            @elsecan('AuthSales')
+                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
+                                                                                    class="btn btn-warning">
+                                                                                    <i class="fas fa-edit text-white"></i>
+                                                                                </a>
+                                                                            @endcan
+
+                                                                            <form class="btn btn-danger"
+                                                                                action="{{ URL::to('data-pelanggan/' . $pelanggan->id) }}"
+                                                                                method="POST">
+                                                                                @csrf
+                                                                                @method('DELETE')
+                                                                                <button type="submit" class="btn p-0 m-0">
+                                                                                    <i
+                                                                                        class="fas fa-trash-alt text-white"></i>
+                                                                                </button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                @php
+                                                                    $i++;
+                                                                @endphp
+                                                            @endif
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        @else
+                                            <div class="tab-pane fade" id="pills-{{ $cls }}" role="tabpanel"
+                                                aria-labelledby="pills-{{ $cls }}-tab" tabindex="0">
+                                                <table class="table table-bordered table-striped"
+                                                    id="dataPelangganDataTable-{{ $cls }}" style="width: 100%;">
+                                                    <thead class="bg-success">
+                                                        <tr>
+                                                            <th class="align-middle text-center">No.</th>
+                                                            <th class="align-middle text-center">ID Pelanggan</th>
+                                                            <th class="align-middle text-center">Nama Pelanggan</th>
+                                                            <th class="align-middle text-center">PIC Sales</th>
+                                                            <th class="align-middle text-center"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @php
+                                                            $i = 1;
+                                                        @endphp
+                                                        @foreach ($dataPelanggan as $pelanggan)
+                                                            @if ($pelanggan->class == $cls)
+                                                                <tr>
+                                                                    <td class="align-middle text-center">
+                                                                        {{ $i }}</td>
+                                                                    <td class="align-middle text-center">
+                                                                        {{ $pelanggan->customer_id }}</td>
+                                                                    <td class="align-middle">{{ $pelanggan->name }}</td>
+                                                                    <td class="align-middle">
+                                                                        @if ($pelanggan->sales_id != null)
+                                                                            <ol>
+                                                                                <li>
+                                                                                    <span class="fw-bold">ID Sales :</span>
+                                                                                    {{ $pelanggan->sales_id }}
+                                                                                </li>
+                                                                                <li>
+                                                                                    <span class="fw-bold">Nama Sales
+                                                                                        :</span>
+                                                                                    {{ $pelanggan->sales_name }}
+                                                                                </li>
+                                                                            </ol>
+                                                                        @else
+                                                                            <p class="text-center p-0 m-0">-</p>
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="align-middle text-center">
+                                                                        <div class="btn-group" role="group"
+                                                                            aria-label="Basic example">
+                                                                            <button type="button" class="btn btn-primary"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#pelanggan{{ $pelanggan->id }}Modal">
+                                                                                <i class="fas fa-eye"></i>
+                                                                            </button>
+                                                                            @include('Admin.Pages.data-pelanggan.modals.' .
+                                                                                    $cls .
+                                                                                    '.layouts.index')
+
+                                                                            @can('AuthMaster')
+                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
+                                                                                    class="btn btn-warning">
+                                                                                    <i class="fas fa-edit text-white"></i>
+                                                                                </a>
+                                                                            @elsecan('AuthSales')
+                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
+                                                                                    class="btn btn-warning">
+                                                                                    <i class="fas fa-edit text-white"></i>
+                                                                                </a>
+                                                                            @endcan
+
+                                                                            <form class="btn btn-danger"
+                                                                                action="{{ URL::to('data-pelanggan/' . $pelanggan->id) }}"
+                                                                                method="POST">
+                                                                                @csrf
+                                                                                @method('DELETE')
+                                                                                <button type="submit"
+                                                                                    class="btn p-0 m-0">
+                                                                                    <i
+                                                                                        class="fas fa-trash-alt text-white"></i>
+                                                                                </button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                @php
+                                                                    $i++;
+                                                                @endphp
+                                                            @endif
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        @endif
+                                        @php
+                                            $idxCont++;
+                                        @endphp
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -125,11 +281,15 @@
     <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
     <script>
         $(document).ready(function() {
-            var table = $('#dataPelangganDataTable').DataTable({
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
-                responsive: true
+            const typeData = ['Personal', 'Bussiness'];
+
+            typeData.forEach(element => {
+                $(`#dataPelangganDataTable-${element}`).DataTable({
+                    rowReorder: {
+                        selector: 'td:nth-child(2)'
+                    },
+                    responsive: true
+                });
             });
         });
     </script>

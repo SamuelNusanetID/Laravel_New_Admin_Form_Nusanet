@@ -25,6 +25,8 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('level:AuthMaster,AuthCRO,AuthSalesManager,AuthSales');
     Route::resource('data-pelanggan', DataPelangganController::class)->middleware('level:AuthMaster,AuthCRO,AuthSalesManager,AuthSales');
+    Route::post('data-pelanggan/{id_pelanggan}/approved', [DataPelangganController::class, 'approvalMessage']);
+    Route::post('data-pelanggan/{id_pelanggan}/rejected', [DataPelangganController::class, 'rejectedMessage']);
     Route::resource('data-layanan', DataLayananController::class)->middleware('level:AuthMaster,AuthCRO,AuthSalesManager,AuthSales');
     Route::resource('data-promo', DataPromoController::class)->middleware('level:AuthMaster,AuthCRO,AuthSalesManager,AuthSales');
     Route::resource('data-pengguna', DataPenggunaController::class)->middleware('level:AuthMaster');
