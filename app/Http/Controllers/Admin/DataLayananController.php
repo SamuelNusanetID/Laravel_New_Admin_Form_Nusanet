@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ServiceList;
+use App\Models\ServicesList;
 use Illuminate\Http\Request;
 
 class DataLayananController extends Controller
@@ -16,7 +16,8 @@ class DataLayananController extends Controller
     public function index()
     {
         $datas = [
-            'titlePage' => 'Data Layanan'
+            'titlePage' => 'Data Layanan',
+            'dataLayanan' => ServicesList::all()
         ];
 
         return view('Admin.Pages.data-layanan.index', $datas);
@@ -49,7 +50,7 @@ class DataLayananController extends Controller
      * @param  \App\Models\ServiceList  $serviceList
      * @return \Illuminate\Http\Response
      */
-    public function show(ServiceList $serviceList)
+    public function show(ServicesList $serviceList)
     {
         //
     }
@@ -60,7 +61,7 @@ class DataLayananController extends Controller
      * @param  \App\Models\ServiceList  $serviceList
      * @return \Illuminate\Http\Response
      */
-    public function edit(ServiceList $serviceList)
+    public function edit(ServicesList $serviceList)
     {
         //
     }
@@ -72,7 +73,7 @@ class DataLayananController extends Controller
      * @param  \App\Models\ServiceList  $serviceList
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ServiceList $serviceList)
+    public function update(Request $request, ServicesList $serviceList)
     {
         //
     }
@@ -83,7 +84,7 @@ class DataLayananController extends Controller
      * @param  \App\Models\ServiceList  $serviceList
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ServiceList $serviceList)
+    public function destroy(ServicesList $serviceList)
     {
         //
     }

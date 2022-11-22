@@ -16,7 +16,8 @@ class DataPromoController extends Controller
     public function index()
     {
         $datas = [
-            'titlePage' => 'Data Promo'
+            'titlePage' => 'Data Promo',
+            'dataPromo' => PromoList::all()
         ];
 
         return view('Admin.Pages.data-promo.index', $datas);

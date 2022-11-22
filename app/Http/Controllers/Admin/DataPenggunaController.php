@@ -16,7 +16,8 @@ class DataPenggunaController extends Controller
     public function index()
     {
         $datas = [
-            'titlePage' => 'Data Pengguna'
+            'titlePage' => 'Data Pengguna',
+            'dataPengguna' => User::all()
         ];
 
         return view('Admin.Pages.data-pengguna.index', $datas);
