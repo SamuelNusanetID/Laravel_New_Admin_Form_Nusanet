@@ -69,14 +69,6 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                @if (session()->has('successMessage'))
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        {{ session('successMessage') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
-                                @endif
-
                                 <div class="tab-content" id="pills-tabContent">
                                     @foreach ($class as $cls)
                                         @if ($idxCont == 0)
@@ -91,6 +83,7 @@
                                                             <th class="align-middle text-center">ID Pelanggan</th>
                                                             <th class="align-middle text-center">Nama Pelanggan</th>
                                                             <th class="align-middle text-center">PIC Sales</th>
+                                                            <th class="align-middle text-center">Status</th>
                                                             <th class="align-middle text-center"></th>
                                                         </tr>
                                                     </thead>
@@ -123,6 +116,69 @@
                                                                             <p class="text-center p-0 m-0">-</p>
                                                                         @endif
                                                                     </td>
+
+                                                                    @if ($pelanggan->approval->next_staging_area != null)
+                                                                        @php
+                                                                            $statusArr = json_decode($pelanggan->approval->array_approval)->{$pelanggan->approval->current_staging_area};
+                                                                            $nama_role = '';
+                                                                            switch ($pelanggan->approval->current_staging_area) {
+                                                                                case 'AuthCRO':
+                                                                                    $nama_role = 'CRO';
+                                                                                    break;
+                                                                                case 'AuthSalesManager':
+                                                                                    $nama_role = 'Sales Manager';
+                                                                                    break;
+                                                                                case 'AuthSales':
+                                                                                    $nama_role = 'Sales';
+                                                                                    break;
+                                                                                default:
+                                                                                    $nama_role = 'Sales';
+                                                                                    break;
+                                                                            }
+                                                                        @endphp
+                                                                        @if ($statusArr->isApproved == null && $statusArr->isRejected == null)
+                                                                            <td class="align-middle text-center">
+                                                                                <span
+                                                                                    class="badge badge-warning text-white">
+                                                                                    Menunggu
+                                                                                    persetujuan
+                                                                                    {{ $statusArr->PIC_Name != null ? $statusArr->PIC_Name : $nama_role }}
+                                                                                </span>
+                                                                            </td>
+                                                                        @else
+                                                                            @if ($statusArr->isApproved == false && $statusArr->isRejected == false)
+                                                                                <td class="align-middle text-center">
+                                                                                    <span
+                                                                                        class="badge badge-success text-white">
+                                                                                        Permohonan telah terkirim
+                                                                                    </span>
+                                                                                </td>
+                                                                            @elseif ($statusArr->isApproved == true && $statusArr->isRejected == false)
+                                                                                <td class="align-middle text-center">
+                                                                                    <span
+                                                                                        class="badge badge-success text-white">
+                                                                                        Telah diapprove
+                                                                                        {{ $statusArr->PIC_Name != null ? $statusArr->PIC_Name : $nama_role }}
+                                                                                    </span>
+                                                                                </td>
+                                                                            @elseif ($statusArr->isApproved == false && $statusArr->isRejected == true)
+                                                                                <td class="align-middle text-center">
+                                                                                    <span
+                                                                                        class="badge badge-danger text-white">
+                                                                                        Telah ditolak
+                                                                                        {{ $statusArr->PIC_Name != null ? $statusArr->PIC_Name : $nama_role }}
+                                                                                    </span>
+                                                                                </td>
+                                                                            @endif
+                                                                        @endif
+                                                                    @else
+                                                                        <td class="align-middle text-center">
+                                                                            <span class="badge badge-success text-white">
+                                                                                Data Pelanggan Telah Diterima Oleh Sales
+                                                                            </span>
+                                                                        </td>
+                                                                    @endif
+
                                                                     <td class="align-middle text-center">
                                                                         <div class="btn-group" role="group"
                                                                             aria-label="Basic example">
@@ -140,22 +196,50 @@
                                                                                     <i class="fas fa-edit text-white"></i>
                                                                                 </a>
                                                                             @elsecan('AuthSales')
-                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
-                                                                                    class="btn btn-warning">
-                                                                                    <i class="fas fa-edit text-white"></i>
-                                                                                </a>
+                                                                                @if ($pelanggan->approval->next_staging_area != null)
+                                                                                    @if ($pelanggan->approval->current_staging_area == 'AuthSales')
+                                                                                        <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
+                                                                                            class="btn btn-warning">
+                                                                                            <i
+                                                                                                class="fas fa-edit text-white"></i>
+                                                                                        </a>
+                                                                                        <form class="btn btn-danger"
+                                                                                            action="{{ URL::to('data-pelanggan/' . $pelanggan->id) }}"
+                                                                                            method="POST">
+                                                                                            @csrf
+                                                                                            @method('DELETE')
+                                                                                            <button type="submit"
+                                                                                                class="btn p-0 m-0">
+                                                                                                <i
+                                                                                                    class="fas fa-trash-alt text-white"></i>
+                                                                                            </button>
+                                                                                        </form>
+                                                                                    @endif
+                                                                                @else
+                                                                                    <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
+                                                                                        class="btn btn-warning">
+                                                                                        <i class="fas fa-edit text-white"></i>
+                                                                                    </a>
+                                                                                    <form class="btn btn-danger"
+                                                                                        action="{{ URL::to('data-pelanggan/' . $pelanggan->id) }}"
+                                                                                        method="POST">
+                                                                                        @csrf
+                                                                                        @method('DELETE')
+                                                                                        <button type="submit"
+                                                                                            class="btn p-0 m-0">
+                                                                                            <i
+                                                                                                class="fas fa-trash-alt text-white"></i>
+                                                                                        </button>
+                                                                                    </form>
+                                                                                @endif
+                                                                            @elsecan('AuthCRO')
+                                                                                @if (!$pelanggan->reference_id)
+                                                                                    <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
+                                                                                        class="btn btn-warning">
+                                                                                        <i class="fas fa-edit text-white"></i>
+                                                                                    </a>
+                                                                                @endif
                                                                             @endcan
-
-                                                                            <form class="btn btn-danger"
-                                                                                action="{{ URL::to('data-pelanggan/' . $pelanggan->id) }}"
-                                                                                method="POST">
-                                                                                @csrf
-                                                                                @method('DELETE')
-                                                                                <button type="submit" class="btn p-0 m-0">
-                                                                                    <i
-                                                                                        class="fas fa-trash-alt text-white"></i>
-                                                                                </button>
-                                                                            </form>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -179,6 +263,7 @@
                                                             <th class="align-middle text-center">ID Pelanggan</th>
                                                             <th class="align-middle text-center">Nama Pelanggan</th>
                                                             <th class="align-middle text-center">PIC Sales</th>
+                                                            <th class="align-middle text-center">Status</th>
                                                             <th class="align-middle text-center"></th>
                                                         </tr>
                                                     </thead>
@@ -211,6 +296,69 @@
                                                                             <p class="text-center p-0 m-0">-</p>
                                                                         @endif
                                                                     </td>
+
+                                                                    @if ($pelanggan->approval->next_staging_area != null)
+                                                                        @php
+                                                                            $statusArr = json_decode($pelanggan->approval->array_approval)->{$pelanggan->approval->current_staging_area};
+                                                                            $nama_role = '';
+                                                                            switch ($pelanggan->approval->current_staging_area) {
+                                                                                case 'AuthCRO':
+                                                                                    $nama_role = 'CRO';
+                                                                                    break;
+                                                                                case 'AuthSalesManager':
+                                                                                    $nama_role = 'Sales Manager';
+                                                                                    break;
+                                                                                case 'AuthSales':
+                                                                                    $nama_role = 'Sales';
+                                                                                    break;
+                                                                                default:
+                                                                                    $nama_role = 'Sales';
+                                                                                    break;
+                                                                            }
+                                                                        @endphp
+                                                                        @if ($statusArr->isApproved == null && $statusArr->isRejected == null)
+                                                                            <td class="align-middle text-center">
+                                                                                <span
+                                                                                    class="badge badge-warning text-white">
+                                                                                    Menunggu
+                                                                                    persetujuan
+                                                                                    {{ $statusArr->PIC_Name != null ? $statusArr->PIC_Name : $nama_role }}
+                                                                                </span>
+                                                                            </td>
+                                                                        @else
+                                                                            @if ($statusArr->isApproved == false && $statusArr->isRejected == false)
+                                                                                <td class="align-middle text-center">
+                                                                                    <span
+                                                                                        class="badge badge-success text-white">
+                                                                                        Permohonan telah terkirim
+                                                                                    </span>
+                                                                                </td>
+                                                                            @elseif ($statusArr->isApproved == true && $statusArr->isRejected == false)
+                                                                                <td class="align-middle text-center">
+                                                                                    <span
+                                                                                        class="badge badge-success text-white">
+                                                                                        Telah diapprove
+                                                                                        {{ $statusArr->PIC_Name != null ? $statusArr->PIC_Name : $nama_role }}
+                                                                                    </span>
+                                                                                </td>
+                                                                            @elseif ($statusArr->isApproved == false && $statusArr->isRejected == true)
+                                                                                <td class="align-middle text-center">
+                                                                                    <span
+                                                                                        class="badge badge-danger text-white">
+                                                                                        Telah ditolak
+                                                                                        {{ $statusArr->PIC_Name != null ? $statusArr->PIC_Name : $nama_role }}
+                                                                                    </span>
+                                                                                </td>
+                                                                            @endif
+                                                                        @endif
+                                                                    @else
+                                                                        <td class="align-middle text-center">
+                                                                            <span class="badge badge-success text-white">
+                                                                                Data Pelanggan Telah Diterima Oleh Sales
+                                                                            </span>
+                                                                        </td>
+                                                                    @endif
+
                                                                     <td class="align-middle text-center">
                                                                         <div class="btn-group" role="group"
                                                                             aria-label="Basic example">
@@ -229,23 +377,50 @@
                                                                                     <i class="fas fa-edit text-white"></i>
                                                                                 </a>
                                                                             @elsecan('AuthSales')
-                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
-                                                                                    class="btn btn-warning">
-                                                                                    <i class="fas fa-edit text-white"></i>
-                                                                                </a>
+                                                                                @if ($pelanggan->approval->next_staging_area != null)
+                                                                                    @if ($pelanggan->approval->current_staging_area == 'AuthSales')
+                                                                                        <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
+                                                                                            class="btn btn-warning">
+                                                                                            <i
+                                                                                                class="fas fa-edit text-white"></i>
+                                                                                        </a>
+                                                                                        <form class="btn btn-danger"
+                                                                                            action="{{ URL::to('data-pelanggan/' . $pelanggan->id) }}"
+                                                                                            method="POST">
+                                                                                            @csrf
+                                                                                            @method('DELETE')
+                                                                                            <button type="submit"
+                                                                                                class="btn p-0 m-0">
+                                                                                                <i
+                                                                                                    class="fas fa-trash-alt text-white"></i>
+                                                                                            </button>
+                                                                                        </form>
+                                                                                    @endif
+                                                                                @else
+                                                                                    <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
+                                                                                        class="btn btn-warning">
+                                                                                        <i class="fas fa-edit text-white"></i>
+                                                                                    </a>
+                                                                                    <form class="btn btn-danger"
+                                                                                        action="{{ URL::to('data-pelanggan/' . $pelanggan->id) }}"
+                                                                                        method="POST">
+                                                                                        @csrf
+                                                                                        @method('DELETE')
+                                                                                        <button type="submit"
+                                                                                            class="btn p-0 m-0">
+                                                                                            <i
+                                                                                                class="fas fa-trash-alt text-white"></i>
+                                                                                        </button>
+                                                                                    </form>
+                                                                                @endif
+                                                                            @elsecan('AuthCRO')
+                                                                                @if (!$pelanggan->reference_id)
+                                                                                    <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
+                                                                                        class="btn btn-warning">
+                                                                                        <i class="fas fa-edit text-white"></i>
+                                                                                    </a>
+                                                                                @endif
                                                                             @endcan
-
-                                                                            <form class="btn btn-danger"
-                                                                                action="{{ URL::to('data-pelanggan/' . $pelanggan->id) }}"
-                                                                                method="POST">
-                                                                                @csrf
-                                                                                @method('DELETE')
-                                                                                <button type="submit"
-                                                                                    class="btn p-0 m-0">
-                                                                                    <i
-                                                                                        class="fas fa-trash-alt text-white"></i>
-                                                                                </button>
-                                                                            </form>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -279,6 +454,7 @@
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/rowreorder/1.3.1/js/dataTables.rowReorder.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             const typeData = ['Personal', 'Bussiness'];
@@ -291,6 +467,23 @@
                     responsive: true
                 });
             });
+
+            // Sweet Alert
+            var isSuccessMessage = {!! json_encode(session()->has('successMessage')) !!}
+            var isErrorMessage = {!! json_encode(session()->has('errorMessage')) !!}
+            if (isSuccessMessage) {
+                Swal.fire(
+                    'Berhasil!',
+                    'Data pelanggan telah berhasil diajukan',
+                    'success'
+                )
+            } else if (isErrorMessage) {
+                Swal.fire(
+                    'Gagal!',
+                    'Data pelanggan gagal diajukan',
+                    'error'
+                )
+            }
         });
     </script>
 @endsection

@@ -72,18 +72,20 @@
                         @break
 
                         @case('AuthSales')
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <form action="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/approved') }}"
-                                        method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success" style="width: 100%;">
-                                            Setujui Permintaan
-                                            <i class="fas fa-check-circle ms-1"></i>
-                                        </button>
-                                    </form>
+                            @if ($pelanggan->survey_id && $pelanggan->extend_note)
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <form action="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/approved') }}"
+                                            method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success" style="width: 100%;">
+                                                Setujui Permintaan
+                                                <i class="fas fa-check-circle ms-1"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         @break
 
                         @default

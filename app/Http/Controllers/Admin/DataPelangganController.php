@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class DataPelangganController extends Controller
 {
@@ -233,6 +234,42 @@ class DataPelangganController extends Controller
     {
         $customerFind = $customer->find($data_pelanggan);
 
+        if ($customerFind->reference_id == null) {
+            $resJSON = [];
+            $validateRequest = $request->validate(
+                [
+                    'reference_id' => 'required'
+                ],
+                [
+                    'reference_id.required' => 'ID Sales Wajib Diisi'
+                ]
+            );
+
+            try {
+                $response = Http::withHeaders([
+                    'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
+                ])->get('https://legacy.is5.nusa.net.id/employees/' . $validateRequest['reference_id']);
+                $resultJSON = json_decode($response->body());
+
+                $resJSON = $resultJSON;
+            } catch (\Throwable $th) {
+                $resJSON = [];
+            }
+
+            try {
+                Mail::raw('Data pelanggan telah diassign ke ' . $resJSON->name . ' oleh ' . auth()->user()->name, function ($message) use ($resJSON) {
+                    $message->to($resJSON->email)
+                        ->subject("Informasi Assignment Data");
+                });
+            } catch (\Throwable $th) {
+                return back()->with('errorMessage', json_encode($th->getMessage()));
+            }
+
+            $customerFind->reference_id = $validateRequest['reference_id'];
+            $customerFind->push();
+            return redirect()->to('data-pelanggan')->with('successMessage', 'Berhasil update data pelanggan.');
+        }
+
         if ($customerFind->class == "Personal") {
             $validateRequest = $request->validate([
                 'pic_name' => 'required',
@@ -424,6 +461,7 @@ class DataPelangganController extends Controller
             case 'AuthSales':
                 $underIDKaryawan = auth()->user()->under_employee_id;
                 $PIC_Name = "";
+                $resJSON = json_decode(json_encode([]));
 
                 try {
                     $response = Http::withHeaders([
@@ -431,9 +469,20 @@ class DataPelangganController extends Controller
                     ])->get('https://legacy.is5.nusa.net.id/employees/' . $underIDKaryawan);
                     $resultJSON = json_decode($response->body());
 
+                    $resJSON = $resultJSON;
                     $PIC_Name = $resultJSON->name;
                 } catch (\Throwable $th) {
+                    $resJSON = [];
                     $PIC_Name = null;
+                }
+
+                try {
+                    Mail::raw('Data pelanggan telah diajukan oleh ' . auth()->user()->name, function ($message) use ($resJSON) {
+                        $message->to($resJSON->email)
+                            ->subject("Persetujuan Data Pelanggan");
+                    });
+                } catch (\Throwable $th) {
+                    return back()->with('errorMessage', json_encode($th->getMessage()));
                 }
 
                 $oldData = $dataCustomer->approval->array_approval;
@@ -450,7 +499,7 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthCRO->isRejected = false;
 
                 // Ambil Message dari Modal
-                $oldDataJSON->{$utype}->message = "";
+                $oldDataJSON->{$utype}->message = "Dokumen Telah Disetujui";
 
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
@@ -460,6 +509,32 @@ class DataPelangganController extends Controller
                 $dataCustomer->approval->array_approval = json_encode($oldDataJSON);
                 break;
             case 'AuthSalesManager':
+                $resJSON = [];
+                foreach (User::all() as $key => $value) {
+                    if ($value->utype == "AuthCRO") {
+                        try {
+                            $response = Http::withHeaders([
+                                'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
+                            ])->get('https://legacy.is5.nusa.net.id/employees/' . $value->employee_id);
+                            $resultJSON = json_decode($response->body());
+
+                            $resJSON = $resultJSON;
+                        } catch (\Throwable $th) {
+                            $resJSON = [];
+                        }
+
+                        try {
+                            Mail::raw('Data pelanggan telah diajukan oleh ' . auth()->user()->name, function ($message) use ($resJSON) {
+                                $message->to($resJSON->email)
+                                    ->subject("Persetujuan Data Pelanggan");
+                            });
+                        } catch (\Throwable $th) {
+                            return back()->with('errorMessage', json_encode($th->getMessage()));
+                            break;
+                        }
+                    }
+                }
+
                 $oldData = $dataCustomer->approval->array_approval;
                 $oldDataJSON = json_decode($oldData);
                 $oldDataJSON->{$utype}->PIC_Name = auth()->user()->name;
@@ -471,7 +546,7 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthCRO->isRejected = false;
 
                 // Ambil Message dari Modal
-                $oldDataJSON->{$utype}->message = "";
+                $oldDataJSON->{$utype}->message = "Dokumen Telah Disetujui";
 
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
@@ -488,13 +563,13 @@ class DataPelangganController extends Controller
                 $oldDataJSON->{$utype}->isRejected = false;
 
                 // Ambil Message dari Modal
-                $oldDataJSON->{$utype}->message = "";
+                $oldDataJSON->{$utype}->message = "Dokumen Telah Disetujui";
 
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
 
                 $dataCustomer->approval->current_staging_area = "AuthCRO";
-                $dataCustomer->approval->next_staging_area = null;
+                $dataCustomer->approval->next_staging_area =    "AuthCRO";
                 $dataCustomer->approval->array_approval = json_encode($oldDataJSON);
                 break;
             default:
@@ -514,6 +589,32 @@ class DataPelangganController extends Controller
 
         switch ($utype) {
             case 'AuthSalesManager':
+                $resJSON = [];
+                foreach (User::all() as $key => $value) {
+                    if ($value->utype == "AuthSales" && $value->under_employee_id == auth()->user()->employee_id) {
+                        try {
+                            $response = Http::withHeaders([
+                                'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
+                            ])->get('https://legacy.is5.nusa.net.id/employees/' . $value->employee_id);
+                            $resultJSON = json_decode($response->body());
+
+                            $resJSON = $resultJSON;
+                        } catch (\Throwable $th) {
+                            $resJSON = [];
+                        }
+
+                        try {
+                            Mail::raw('Data pelanggan telah ditolak oleh ' . auth()->user()->name, function ($message) use ($resJSON) {
+                                $message->to($resJSON->email)
+                                    ->subject("Persetujuan Data Pelanggan");
+                            });
+                        } catch (\Throwable $th) {
+                            return back()->with('errorMessage', json_encode($th->getMessage()));
+                            break;
+                        }
+                    }
+                }
+
                 $oldData = $dataCustomer->approval->array_approval;
                 $oldDataJSON = json_decode($oldData);
                 $oldDataJSON->{$utype}->PIC_Name = auth()->user()->name;
@@ -525,7 +626,7 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthSales->isRejected = false;
 
                 // Ambil dari Modal
-                $oldDataJSON->{$utype}->message = "";
+                $oldDataJSON->{$utype}->message = "Dokumen telah ditolak";
 
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
@@ -535,6 +636,8 @@ class DataPelangganController extends Controller
                 $dataCustomer->approval->array_approval = json_encode($oldDataJSON);
                 break;
             case 'AuthCRO':
+                $mailToProcess = "AuthSales";
+
                 $oldData = $dataCustomer->approval->array_approval;
                 $oldDataJSON = json_decode($oldData);
                 $oldDataJSON->{$utype}->PIC_Name = auth()->user()->name;
@@ -549,7 +652,7 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthSales->isRejected = false;
 
                 // Ambil Dari Modal
-                $oldDataJSON->{$utype}->message = "";
+                $oldDataJSON->{$utype}->message = "Dokumen telah ditolak";
 
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
