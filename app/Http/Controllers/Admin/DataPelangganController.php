@@ -438,7 +438,7 @@ class DataPelangganController extends Controller
 
                 $oldData = $dataCustomer->approval->array_approval;
                 $oldDataJSON = json_decode($oldData);
-                $oldDataJSON->{$utype}->PIC_Name = $PIC_Name;
+                $oldDataJSON->{$utype}->PIC_Name = auth()->user()->name;
 
                 $oldDataJSON->{$utype}->isApproved = true;
                 $oldDataJSON->{$utype}->isRejected = false;
@@ -449,7 +449,9 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthCRO->isApproved = false;
                 $oldDataJSON->AuthCRO->isRejected = false;
 
-                $oldDataJSON->{$utype}->message = "For Testing";
+                // Ambil Message dari Modal
+                $oldDataJSON->{$utype}->message = "";
+
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
 
@@ -468,7 +470,9 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthCRO->isApproved = false;
                 $oldDataJSON->AuthCRO->isRejected = false;
 
-                $oldDataJSON->{$utype}->message = "For Testing";
+                // Ambil Message dari Modal
+                $oldDataJSON->{$utype}->message = "";
+
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
 
@@ -482,7 +486,10 @@ class DataPelangganController extends Controller
                 $oldDataJSON->{$utype}->PIC_Name = auth()->user()->name;
                 $oldDataJSON->{$utype}->isApproved = true;
                 $oldDataJSON->{$utype}->isRejected = false;
-                $oldDataJSON->{$utype}->message = "For Testing";
+
+                // Ambil Message dari Modal
+                $oldDataJSON->{$utype}->message = "";
+
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
 
@@ -517,7 +524,9 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthSales->isApproved = false;
                 $oldDataJSON->AuthSales->isRejected = false;
 
-                $oldDataJSON->{$utype}->message = "For Testing";
+                // Ambil dari Modal
+                $oldDataJSON->{$utype}->message = "";
+
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
 
@@ -539,7 +548,9 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthSales->isApproved = false;
                 $oldDataJSON->AuthSales->isRejected = false;
 
-                $oldDataJSON->{$utype}->message = "For Testing";
+                // Ambil Dari Modal
+                $oldDataJSON->{$utype}->message = "";
+
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
 
