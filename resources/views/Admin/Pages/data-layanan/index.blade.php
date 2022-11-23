@@ -38,19 +38,23 @@
                                 </h6>
                             </div>
                             <div class="card-body">
+                                <a href="{{ URL::to('data-layanan/create') }}" class="btn btn-primary mb-3">
+                                    <i class="fas fa-plus-circle me-1"></i>
+                                    Tambah {{ $titlePage }}
+                                </a>
                                 <table class="table table-bordered" id="dataTableDataLayanan">
                                     <thead class="bg-success">
                                         <tr>
-                                            <th>No.</th>
-                                            <th>Nama Paket</th>
-                                            <th>Tipe Paket</th>
-                                            <th>Kategori Paket</th>
-                                            <th>Kecepatan Paket</th>
-                                            <th>Harga Paket</th>
-                                            <th>Harga Retail Paket</th>
-                                            <th>Harga Pemerintah Paket</th>
-                                            <th>Catatan</th>
-                                            <th></th>
+                                            <th class="align-middle text-center">No.</th>
+                                            <th class="align-middle text-center">Nama Paket</th>
+                                            <th class="align-middle text-center">Tipe Paket</th>
+                                            <th class="align-middle text-center">Kategori Paket</th>
+                                            <th class="align-middle text-center">Kecepatan Paket</th>
+                                            <th class="align-middle text-center">Harga Paket</th>
+                                            <th class="align-middle text-center">Harga Retail Paket</th>
+                                            <th class="align-middle text-center">Harga Pemerintah Paket</th>
+                                            <th class="align-middle text-center">Catatan</th>
+                                            <th class="align-middle text-center"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -59,16 +63,30 @@
                                         @endphp
                                         @foreach ($dataLayanan as $item)
                                             <tr>
-                                                <td>{{ $i }}</td>
-                                                <td>{{ $item->package_name }}</td>
-                                                <td>{{ $item->package_type }}</td>
-                                                <td>{{ $item->package_categories }}</td>
-                                                <td>{{ $item->package_speed }}</td>
-                                                <td>{{ $item->package_price }}</td>
-                                                <td>{{ $item->retail_package_price }}</td>
-                                                <td>{{ $item->government_package_price }}</td>
-                                                <td>{{ $item->noted_service }}</td>
-                                                <td></td>
+                                                <td class="align-middle text-center">{{ $i }}</td>
+                                                <td class="align-middle">{{ $item->package_name }}</td>
+                                                <td class="align-middle">{{ $item->package_type }}</td>
+                                                <td class="align-middle text-center">{{ $item->package_categories }}</td>
+                                                <td class="align-middle text-center">{{ $item->package_speed }}</td>
+                                                <td class="align-middle text-center">{{ $item->package_price }}</td>
+                                                <td class="align-middle text-center">{{ $item->retail_package_price }}</td>
+                                                <td class="align-middle text-center">{{ $item->government_package_price }}
+                                                </td>
+                                                <td class="align-middle">{{ $item->noted_service }}</td>
+                                                <td class="align-middle">
+                                                    <a href="{{ URL::to('data-layanan/' . $item->id . '/edit') }}"
+                                                        class="btn btn-warning text-white">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="{{ URL::to('data-layanan/' . $item->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="fas fa-trash-alt me-1"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                             </tr>
                                             @php
                                                 $i++;

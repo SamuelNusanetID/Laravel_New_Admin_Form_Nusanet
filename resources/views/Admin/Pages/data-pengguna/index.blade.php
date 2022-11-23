@@ -38,15 +38,19 @@
                                 </h6>
                             </div>
                             <div class="card-body">
+                                <a href="{{ URL::to('data-pengguna/create') }}" class="btn btn-primary mb-3">
+                                    <i class="fas fa-plus-circle me-1"></i>
+                                    Tambah {{ $titlePage }}
+                                </a>
                                 <table class="table table-bordered" id="dataTableDataPengguna" style="width: 100%;">
                                     <thead class="bg-success">
                                         <tr>
-                                            <th>No.</th>
-                                            <th>ID Karyawan</th>
-                                            <th>Nama Karyawan</th>
-                                            <th>Email Karyawan</th>
-                                            <th>Pimpinan Divisi</th>
-                                            <th></th>
+                                            <th class="align-middle text-center">No.</th>
+                                            <th class="align-middle text-center">ID Karyawan</th>
+                                            <th class="align-middle text-center">Nama Karyawan</th>
+                                            <th class="align-middle text-center">Email Karyawan</th>
+                                            <th class="align-middle text-center">Manager</th>
+                                            <th class="align-middle text-center"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -55,12 +59,25 @@
                                         @endphp
                                         @foreach ($dataPengguna as $item)
                                             <tr>
-                                                <td>{{ $i }}</td>
-                                                <td>{{ $item->employee_id }}</td>
-                                                <td>{{ $item->name }}</td>
-                                                <td>{{ $item->email }}</td>
-                                                <td>{{ $item->password }}</td>
-                                                <td></td>
+                                                <td class="align-middle text-center">{{ $i }}</td>
+                                                <td class="align-middle text-center">{{ $item->employee_id }}</td>
+                                                <td class="align-middle">{{ $item->name }}</td>
+                                                <td class="align-middle text-center">{{ $item->email }}</td>
+                                                <td class="align-middle text-center">{{ $item->pic_name }}</td>
+                                                <td class="align-middle text-center">
+                                                    <a href="{{ URL::to('data-pengguna/' . $item->id . '/edit') }}"
+                                                        class="btn btn-warning text-white">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="{{ URL::to('data-pengguna/' . $item->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="fas fa-trash-alt me-1"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                             </tr>
                                             @php
                                                 $i++;

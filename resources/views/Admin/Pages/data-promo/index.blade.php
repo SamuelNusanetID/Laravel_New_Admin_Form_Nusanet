@@ -38,19 +38,23 @@
                                 </h6>
                             </div>
                             <div class="card-body">
+                                <a href="{{ URL::to('data-promo/create') }}" class="btn btn-primary mb-3">
+                                    <i class="fas fa-plus-circle me-1"></i>
+                                    Tambah {{ $titlePage }}
+                                </a>
                                 <table class="table table-bordered" id="dataTableDataPromo" style="width: 100%;">
                                     <thead class="bg-success">
                                         <tr>
-                                            <th>No.</th>
-                                            <th>Kode Promo</th>
-                                            <th>Nama Paket</th>
-                                            <th>Jangka Waktu Pembayaran Paket</th>
-                                            <th>Potongan Diskon Paket</th>
-                                            <th>Potongan Bulan Paket</th>
-                                            <th>Status Potongan Bulan</th>
-                                            <th>Tanggal Aktif Promo</th>
-                                            <th>Tanggal Berakhir Promo</th>
-                                            <th></th>
+                                            <th class="align-middle text-center">No.</th>
+                                            <th class="align-middle text-center">Kode Promo</th>
+                                            <th class="align-middle text-center">Nama Paket</th>
+                                            <th class="align-middle text-center">Jangka Waktu Pembayaran Paket</th>
+                                            <th class="align-middle text-center">Potongan Diskon Paket</th>
+                                            <th class="align-middle text-center">Potongan Bulan Paket</th>
+                                            <th class="align-middle text-center">Status Potongan Bulan</th>
+                                            <th class="align-middle text-center">Tanggal Aktif Promo</th>
+                                            <th class="align-middle text-center">Tanggal Berakhir Promo</th>
+                                            <th class="align-middle text-center"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -59,16 +63,28 @@
                                         @endphp
                                         @foreach ($dataPromo as $item)
                                             <tr>
-                                                <td>{{ $i }}</td>
-                                                <td>{{ $item->promo_code }}</td>
-                                                <td>{{ $item->package_name }}</td>
-                                                <td>{{ $item->package_top }}</td>
-                                                <td>{{ $item->discount_cut }}</td>
-                                                <td>{{ $item->monthly_cut }}</td>
-                                                <td>{{ $item->monthly_cut_status }}</td>
-                                                <td>{{ $item->activate_date }}</td>
-                                                <td>{{ $item->expired_date }}</td>
-                                                <td></td>
+                                                <td class="align-middle text-center">{{ $i }}</td>
+                                                <td class="align-middle text-center">{{ $item->promo_code }}</td>
+                                                <td class="align-middle">{{ $item->package_name }}</td>
+                                                <td class="align-middle text-center">{{ $item->package_top }}</td>
+                                                <td class="align-middle text-center">{{ $item->discount_cut }}</td>
+                                                <td class="align-middle text-center">{{ $item->monthly_cut }}</td>
+                                                <td class="align-middle text-center">{{ $item->monthly_cut_status }}</td>
+                                                <td class="align-middle text-center">{{ $item->activate_date }}</td>
+                                                <td class="align-middle text-center">{{ $item->expired_date }}</td>
+                                                <td class="align-middle text-center">
+                                                    <a href="{{ URL::to('data-promo/' . $item->id . '/edit') }}"
+                                                        class="btn btn-warning text-white">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="{{ URL::to('data-promo/' . $item->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="fas fa-trash-alt me-1"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                             </tr>
                                             @php
                                                 $i++;

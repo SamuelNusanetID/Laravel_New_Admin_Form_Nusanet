@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class DataPenggunaController extends Controller
 {
@@ -16,9 +17,25 @@ class DataPenggunaController extends Controller
     public function index()
     {
         $datas = [
-            'titlePage' => 'Data Pengguna',
-            'dataPengguna' => User::all()
+            'titlePage' => 'Data Pengguna'
         ];
+
+        $fetchDataPengguna = User::all();
+
+        foreach ($fetchDataPengguna as $key => $value) {
+            try {
+                $response = Http::withHeaders([
+                    'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
+                ])->get('https://legacy.is5.nusa.net.id/employees/' . $value->under_employee_id);
+                $resultJSON = json_decode($response->body());
+
+                $fetchDataPengguna[$key]->pic_name = $resultJSON->name;
+            } catch (\Throwable $th) {
+                $fetchDataPengguna[$key]->pic_name = "-";
+            }
+        }
+
+        $datas['dataPengguna'] = $fetchDataPengguna;
 
         return view('Admin.Pages.data-pengguna.index', $datas);
     }
