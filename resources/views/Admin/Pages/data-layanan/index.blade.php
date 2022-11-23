@@ -124,13 +124,13 @@
             if (isSuccessMessage) {
                 Swal.fire(
                     'Berhasil!',
-                    'Data pelanggan telah berhasil diajukan',
+                    {!! json_encode(session('successMessage')) !!},
                     'success'
                 )
             } else if (isErrorMessage) {
                 Swal.fire(
                     'Gagal!',
-                    'Data pelanggan gagal diajukan',
+                    {!! json_encode(session('errorMessage')) !!},
                     'error'
                 )
             }
