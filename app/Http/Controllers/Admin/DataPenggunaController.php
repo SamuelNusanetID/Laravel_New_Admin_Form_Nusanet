@@ -20,7 +20,13 @@ class DataPenggunaController extends Controller
             'titlePage' => 'Data Pengguna'
         ];
 
-        $fetchDataPengguna = User::all();
+        try {
+            $fetchDataPengguna = User::all();
+        } catch (\Throwable $th) {
+            $fetchDataPengguna = [];
+        }
+
+
 
         foreach ($fetchDataPengguna as $key => $value) {
             try {
@@ -47,7 +53,11 @@ class DataPenggunaController extends Controller
      */
     public function create()
     {
-        //
+        $datas = [
+            'titlePage' => 'Data Pengguna'
+        ];
+
+        return view('Admin.Pages.data-pengguna.tambah', $datas);
     }
 
     /**
@@ -58,7 +68,79 @@ class DataPenggunaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validateRequest = $request->validate(
+            [
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|confirmed|min:8',
+                'employee_id' => 'required|unique:users,employee_id',
+                'name' => 'required',
+                'utype' => 'required'
+            ],
+            [
+                'email.required' => 'Field Email Wajib Diisi',
+                'email.email' => 'Email tidak valid',
+                'email.unique' => 'Email sudah terdaftar',
+                'password.required' => 'Field Password Wajib Diisi',
+                'password.confirmed' => 'Password tidak sama',
+                'password.min' => 'Password harus berjumlah min. 8 karakter',
+                'employee_id.required' => 'Field ID Karyawan Wajib Diisi',
+                'employee_id.unique' => 'ID Karyawan sudah terdaftar',
+                'name.required' => 'Field Nama Karyawan Wajib Diisi',
+                'utype.required' => 'Field Aturan Pengguna Wajib Diisi'
+            ]
+        );
+
+        $isEmployeeExist = false;
+        if ($request->get('under_employee_id')) {
+            try {
+                $response = Http::withHeaders([
+                    'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
+                ])->get('https://legacy.is5.nusa.net.id/employees/' . $request->get('under_employee_id'));
+                $resultJSON = json_decode($response->body());
+
+                if (isset($resultJSON->name)) {
+                    $isEmployeeExist = true;
+                } else {
+                    $isEmployeeExist = false;
+                }
+            } catch (\Throwable $th) {
+                $isEmployeeExist = false;
+            }
+        }
+
+        if ($isEmployeeExist) {
+            try {
+                $newUser = new User();
+                $newUser->email = $validateRequest['email'];
+                $newUser->password = $validateRequest['password'];
+                $newUser->employee_id = $validateRequest['employee_id'];
+                $newUser->name = $validateRequest['name'];
+                $newUser->under_employee_id = $request->get('under_employee_id');
+                $newUser->utype = $validateRequest['utype'];
+                $newUser->isApprovedByAdmin = true;
+                $newUser->save();
+
+                return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil ditambahkan.');
+            } catch (\Throwable $th) {
+                return back()->withInput()->with('errorMessage', 'Data pengguna gagal ditambahkan.');
+            }
+        } else {
+            try {
+                $newUser = new User();
+                $newUser->email = $validateRequest['email'];
+                $newUser->password = $validateRequest['password'];
+                $newUser->employee_id = $validateRequest['employee_id'];
+                $newUser->name = $validateRequest['name'];
+                $newUser->under_employee_id = null;
+                $newUser->utype = $validateRequest['utype'];
+                $newUser->isApprovedByAdmin = true;
+                $newUser->save();
+
+                return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil ditambahkan.');
+            } catch (\Throwable $th) {
+                return back()->withInput()->with('errorMessage', 'Data pengguna gagal ditambahkan.');
+            }
+        }
     }
 
     /**
@@ -78,9 +160,19 @@ class DataPenggunaController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit(User $user, $data_pengguna)
     {
-        //
+        $datas = [
+            'titlePage' => 'Data Pengguna'
+        ];
+
+        try {
+            $datas['dataPengguna'] = $user->find($data_pengguna);
+        } catch (\Throwable $th) {
+            $datas['dataPengguna'] = [];
+        }
+
+        return view('Admin.Pages.data-pengguna.update', $datas);
     }
 
     /**
@@ -90,9 +182,81 @@ class DataPenggunaController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user, $data_pengguna)
     {
-        //
+        $validateRequest = $request->validate(
+            [
+                'email' => 'required|email|unique:users,email,' . $data_pengguna,
+                // 'password' => 'required|confirmed|min:8',
+                'employee_id' => 'required|unique:users,employee_id,' . $data_pengguna,
+                'name' => 'required',
+                'utype' => 'required'
+            ],
+            [
+                'email.required' => 'Field Email Wajib Diisi',
+                'email.email' => 'Email tidak valid',
+                'email.unique' => 'Email sudah terdaftar',
+                // 'password.required' => 'Field Password Wajib Diisi',
+                // 'password.confirmed' => 'Password tidak sama',
+                // 'password.min' => 'Password harus berjumlah min. 8 karakter',
+                'employee_id.required' => 'Field ID Karyawan Wajib Diisi',
+                'employee_id.unique' => 'ID Karyawan sudah terdaftar',
+                'name.required' => 'Field Nama Karyawan Wajib Diisi',
+                'utype.required' => 'Field Aturan Pengguna Wajib Diisi'
+            ]
+        );
+
+        $isEmployeeExist = false;
+
+        if ($request->get('under_employee_id')) {
+            try {
+                $response = Http::withHeaders([
+                    'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
+                ])->get('https://legacy.is5.nusa.net.id/employees/' . $request->get('under_employee_id'));
+                $resultJSON = json_decode($response->body());
+                if (isset($resultJSON->name)) {
+                    $isEmployeeExist = true;
+                } else {
+                    $isEmployeeExist = false;
+                }
+            } catch (\Throwable $th) {
+                $isEmployeeExist = false;
+            }
+        }
+
+        if ($isEmployeeExist) {
+            try {
+                $updateUser = $user->find($data_pengguna);
+                $updateUser->email = $validateRequest['email'];
+                // $updateUser->password = $validateRequest['password'];
+                $updateUser->employee_id = $validateRequest['employee_id'];
+                $updateUser->name = $validateRequest['name'];
+                $updateUser->under_employee_id = $request->get('under_employee_id');
+                $updateUser->utype = $validateRequest['utype'];
+                $updateUser->isApprovedByAdmin = true;
+                $updateUser->save();
+
+                return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil diubah.');
+            } catch (\Throwable $th) {
+                return back()->withInput()->with('errorMessage', 'Data pengguna gagal diubah.');
+            }
+        } else {
+            try {
+                $updateUser = $user->find($data_pengguna);
+                $updateUser->email = $validateRequest['email'];
+                // $updateUser->password = $validateRequest['password'];
+                $updateUser->employee_id = $validateRequest['employee_id'];
+                $updateUser->name = $validateRequest['name'];
+                $updateUser->under_employee_id = null;
+                $updateUser->utype = $validateRequest['utype'];
+                $updateUser->isApprovedByAdmin = true;
+                $updateUser->save();
+
+                return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil diubah.');
+            } catch (\Throwable $th) {
+                return back()->withInput()->with('errorMessage', 'Data pengguna gagal diubah.');
+            }
+        }
     }
 
     /**
@@ -101,8 +265,15 @@ class DataPenggunaController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(User $user, $data_pengguna)
     {
-        //
+        try {
+            $newUser = $user->find($data_pengguna);
+            $newUser->delete();
+
+            return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil dihapus.');
+        } catch (\Throwable $th) {
+            return back()->withInput()->with('errorMessage', 'Data pengguna gagal dihapus.');
+        }
     }
 }
