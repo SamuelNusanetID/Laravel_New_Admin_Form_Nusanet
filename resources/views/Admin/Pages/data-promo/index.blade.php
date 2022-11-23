@@ -48,10 +48,10 @@
                                             <th class="align-middle text-center">No.</th>
                                             <th class="align-middle text-center">Kode Promo</th>
                                             <th class="align-middle text-center">Nama Paket</th>
-                                            <th class="align-middle text-center">Jangka Waktu Pembayaran Paket</th>
-                                            <th class="align-middle text-center">Potongan Diskon Paket</th>
-                                            <th class="align-middle text-center">Potongan Bulan Paket</th>
-                                            <th class="align-middle text-center">Status Potongan Bulan</th>
+                                            <th class="align-middle text-center">Jangka Waktu Pembayaran</th>
+                                            <th class="align-middle text-center">Diskon</th>
+                                            <th class="align-middle text-center">Jumlah Bulan</th>
+                                            <th class="align-middle text-center">Kriteria Promo</th>
                                             <th class="align-middle text-center">Tanggal Aktif Promo</th>
                                             <th class="align-middle text-center">Tanggal Berakhir Promo</th>
                                             <th class="align-middle text-center"></th>
@@ -64,11 +64,11 @@
                                         @foreach ($dataPromo as $item)
                                             <tr>
                                                 <td class="align-middle text-center">{{ $i }}</td>
-                                                <td class="align-middle text-center">{{ $item->promo_code }}</td>
+                                                <td class="align-middle text-center fw-bold">{{ $item->promo_code }}</td>
                                                 <td class="align-middle">{{ $item->package_name }}</td>
                                                 <td class="align-middle text-center">{{ $item->package_top }}</td>
                                                 <td class="align-middle text-center">{{ $item->discount_cut }}</td>
-                                                <td class="align-middle text-center">{{ $item->monthly_cut }}</td>
+                                                <td class="align-middle text-center">{{ $item->monthly_cut }} Bulan</td>
                                                 <td class="align-middle text-center">{{ $item->monthly_cut_status }}</td>
                                                 <td class="align-middle text-center">{{ $item->activate_date }}</td>
                                                 <td class="align-middle text-center">{{ $item->expired_date }}</td>

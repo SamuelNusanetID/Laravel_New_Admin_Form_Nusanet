@@ -65,14 +65,18 @@
                                             <tr>
                                                 <td class="align-middle text-center">{{ $i }}</td>
                                                 <td class="align-middle">{{ $item->package_name }}</td>
-                                                <td class="align-middle">{{ $item->package_type }}</td>
+                                                <td class="align-middle text-center">{{ $item->package_type }}</td>
                                                 <td class="align-middle text-center">{{ $item->package_categories }}</td>
-                                                <td class="align-middle text-center">{{ $item->package_speed }}</td>
-                                                <td class="align-middle text-center">{{ $item->package_price }}</td>
-                                                <td class="align-middle text-center">{{ $item->retail_package_price }}</td>
-                                                <td class="align-middle text-center">{{ $item->government_package_price }}
+                                                <td class="align-middle text-center">{{ $item->package_speed }} Mbps</td>
+                                                <td class="align-middle text-center">Rp.
+                                                    {{ number_format($item->package_price, 2) }},-</td>
+                                                <td class="align-middle text-center">Rp.
+                                                    {{ number_format($item->retail_package_price) }},-</td>
+                                                <td class="align-middle text-center">Rp.
+                                                    {{ number_format($item->government_package_price) }},-
                                                 </td>
-                                                <td class="align-middle">{{ $item->noted_service }}</td>
+                                                <td class="align-middle text-center">
+                                                    {{ $item->noted_service ? $item->noted_service : '-' }}</td>
                                                 <td class="align-middle">
                                                     <a href="{{ URL::to('data-layanan/' . $item->id . '/edit') }}"
                                                         class="btn btn-warning text-white">
