@@ -49,8 +49,8 @@
                                             <th class="align-middle text-center">Kode Promo</th>
                                             <th class="align-middle text-center">Nama Paket</th>
                                             <th class="align-middle text-center">Jangka Waktu Pembayaran</th>
-                                            <th class="align-middle text-center">Diskon</th>
-                                            <th class="align-middle text-center">Jumlah Bulan</th>
+                                            <th class="align-middle text-center">Diskon (%)</th>
+                                            <th class="align-middle text-center">Jumlah Bulan (Bulan)</th>
                                             <th class="align-middle text-center">Kriteria Promo</th>
                                             <th class="align-middle text-center">Tanggal Aktif Promo</th>
                                             <th class="align-middle text-center">Tanggal Berakhir Promo</th>
@@ -68,7 +68,7 @@
                                                 <td class="align-middle">{{ $item->package_name }}</td>
                                                 <td class="align-middle text-center">{{ $item->package_top }}</td>
                                                 <td class="align-middle text-center">{{ $item->discount_cut }}</td>
-                                                <td class="align-middle text-center">{{ $item->monthly_cut }} Bulan</td>
+                                                <td class="align-middle text-center">{{ $item->monthly_cut }}</td>
                                                 <td class="align-middle text-center">{{ $item->monthly_cut_status }}</td>
                                                 <td class="align-middle text-center">{{ $item->activate_date }}</td>
                                                 <td class="align-middle text-center">{{ $item->expired_date }}</td>
@@ -122,13 +122,13 @@
             if (isSuccessMessage) {
                 Swal.fire(
                     'Berhasil!',
-                    'Data pelanggan telah berhasil diajukan',
+                    {!! json_encode(session('successMessage')) !!},
                     'success'
                 )
             } else if (isErrorMessage) {
                 Swal.fire(
                     'Gagal!',
-                    'Data pelanggan gagal diajukan',
+                    {!! json_encode(session('errorMessage')) !!},
                     'error'
                 )
             }
