@@ -452,7 +452,7 @@ class DataPelangganController extends Controller
         //
     }
 
-    public function approvalMessage($id_pelanggan)
+    public function approvalMessage(Request $request, $id_pelanggan)
     {
         $utype = auth()->user()->utype;
         $dataCustomer = Customer::find($id_pelanggan);
@@ -477,9 +477,18 @@ class DataPelangganController extends Controller
                 }
 
                 try {
-                    Mail::raw('Data pelanggan telah diajukan oleh ' . auth()->user()->name, function ($message) use ($resJSON) {
-                        $message->to($resJSON->email)
-                            ->subject("Persetujuan Data Pelanggan");
+                    $email_params = [
+                        'notif_receiever' => $resJSON->name,
+                        'customer_name' => $dataCustomer->name,
+                        'status' => 'disetujui',
+                        'notif_sender' => auth()->user()->name,
+                        'message_body' => 'Pesan disini',
+                        'send_to' => $resJSON->email,
+                        'subject_email' => 'Pemberitahuan progress data pelanggan'
+                    ];
+                    Mail::send('Email.notification', $email_params, function ($message) use ($email_params) {
+                        $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                        $message->to($email_params['send_to'])->subject($email_params['subject_email']);
                     });
                 } catch (\Throwable $th) {
                     return back()->with('errorMessage', json_encode($th->getMessage()));
@@ -524,9 +533,18 @@ class DataPelangganController extends Controller
                         }
 
                         try {
-                            Mail::raw('Data pelanggan telah diajukan oleh ' . auth()->user()->name, function ($message) use ($resJSON) {
-                                $message->to($resJSON->email)
-                                    ->subject("Persetujuan Data Pelanggan");
+                            $email_params = [
+                                'notif_receiever' => $resJSON->name,
+                                'customer_name' => $dataCustomer->name,
+                                'status' => 'disetujui',
+                                'notif_sender' => auth()->user()->name,
+                                'message_body' => 'Pesan disini',
+                                'send_to' => $resJSON->email,
+                                'subject_email' => 'Pemberitahuan progress data pelanggan'
+                            ];
+                            Mail::send('Email.notification', $email_params, function ($message) use ($email_params) {
+                                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                                $message->to($email_params['send_to'])->subject($email_params['subject_email']);
                             });
                         } catch (\Throwable $th) {
                             return back()->with('errorMessage', json_encode($th->getMessage()));
@@ -582,7 +600,7 @@ class DataPelangganController extends Controller
         return back()->with('successMessage', 'Berhasil mengupdate timeline.');
     }
 
-    public function rejectedMessage($id_pelanggan)
+    public function rejectedMessage(Request $request, $id_pelanggan)
     {
         $utype = auth()->user()->utype;
         $dataCustomer = Customer::find($id_pelanggan);
@@ -604,9 +622,18 @@ class DataPelangganController extends Controller
                         }
 
                         try {
-                            Mail::raw('Data pelanggan telah ditolak oleh ' . auth()->user()->name, function ($message) use ($resJSON) {
-                                $message->to($resJSON->email)
-                                    ->subject("Persetujuan Data Pelanggan");
+                            $email_params = [
+                                'notif_receiever' => $resJSON->name,
+                                'customer_name' => $dataCustomer->name,
+                                'status' => 'ditolak',
+                                'notif_sender' => auth()->user()->name,
+                                'message_body' => 'Pesan disini',
+                                'send_to' => $resJSON->email,
+                                'subject_email' => 'Pemberitahuan progress data pelanggan'
+                            ];
+                            Mail::send('Email.notification', $email_params, function ($message) use ($email_params) {
+                                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                                $message->to($email_params['send_to'])->subject($email_params['subject_email']);
                             });
                         } catch (\Throwable $th) {
                             return back()->with('errorMessage', json_encode($th->getMessage()));

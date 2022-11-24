@@ -65,6 +65,29 @@
     <script src="{{ URL::to('plugin/adminlte/dist/js/pages/dashboard3.js') }}"></script>
 
     @yield('addonjs')
+
+    {{-- <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        $('#feedbackButton').on('click', () => {
+            const screenshotTarget = document.body;
+
+            html2canvas(screenshotTarget).then((canvas) => {
+                // Get Date Now
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                let mm = today.getMonth() + 1; // Months start at 0!
+                let dd = today.getDate();
+
+                if (dd < 10) dd = '0' + dd;
+                if (mm < 10) mm = '0' + mm;
+
+                const formattedToday = dd + '_' + mm + '_' + yyyy + '-' + today.getHours() + ':' + today
+                    .getMinutes() + ':' + today.getSeconds();
+
+                const url = canvas.toDataURL("image/png");
+            });
+        });
+    </script> --}}
 </body>
 
 </html>
