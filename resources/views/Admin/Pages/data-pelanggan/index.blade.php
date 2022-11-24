@@ -141,7 +141,7 @@
                                                                                 <span
                                                                                     class="badge badge-warning text-white">
                                                                                     Menunggu
-                                                                                    persetujuan
+                                                                                    revisi
                                                                                     {{ $statusArr->PIC_Name != null ? $statusArr->PIC_Name : $nama_role }}
                                                                                 </span>
                                                                             </td>
@@ -321,7 +321,7 @@
                                                                                 <span
                                                                                     class="badge badge-warning text-white">
                                                                                     Menunggu
-                                                                                    persetujuan
+                                                                                    revisi
                                                                                     {{ $statusArr->PIC_Name != null ? $statusArr->PIC_Name : $nama_role }}
                                                                                 </span>
                                                                             </td>
