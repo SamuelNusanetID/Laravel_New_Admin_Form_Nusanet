@@ -482,20 +482,30 @@
                                                         <label for="package_price" class="col-sm-6 col-form-label">Harga
                                                             Paket</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" id="package_price"
-                                                                name="data[{{ $packageIDX - 1 }}][service_price]"
-                                                                value="{{ old('package_price', json_decode($dataPelanggan->service->service_package)[$key]->service_price) }}">
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-success"
+                                                                    id="basic-addon1">Rp.</span>
+                                                                <input type="text" class="form-control" id="package_price"
+                                                                    name="data[{{ $packageIDX - 1 }}][service_price]"
+                                                                    value="">
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <input type="hidden" id="package_price_cache"
+                                                        value="{{ json_decode($dataPelanggan->service->service_package)[$key]->service_price }}">
                                                     <div class="mb-3 row">
                                                         <label for="package_top" class="col-sm-6 col-form-label">Jangka
                                                             Waktu
                                                             Pembayaran
                                                             Paket</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" id="package_top"
-                                                                name="data[{{ $packageIDX - 1 }}][termofpaymentDeals]"
-                                                                value="{{ old('package_top', json_decode($dataPelanggan->service->service_package)[$key]->termofpaymentDeals) }}">
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" id="package_top"
+                                                                    name="data[{{ $packageIDX - 1 }}][termofpaymentDeals]"
+                                                                    value="{{ old('package_top', json_decode($dataPelanggan->service->service_package)[$key]->termofpaymentDeals) }}">
+                                                                <span class="input-group-text bg-success"
+                                                                    id="basic-addon2">Bulan</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="mb-3 row">
@@ -540,12 +550,10 @@
                                                             Waktu
                                                             Pembayaran
                                                             Paket</label>
-                                                        <div class="col-sm-6">
-                                                            <input type="text" readonly class="form-control-plaintext"
-                                                                id="package_top"
-                                                                name="data[{{ $packageIDX - 1 }}][termofpaymentDeals]"
-                                                                value="{{ old('package_top', json_decode($dataPelanggan->service->service_package)[$key]->termofpaymentDeals) }}">
-                                                        </div>
+                                                        <input type="text" readonly class="form-control-plaintext"
+                                                            id="package_top"
+                                                            name="data[{{ $packageIDX - 1 }}][termofpaymentDeals]"
+                                                            value="{{ old('package_top', json_decode($dataPelanggan->service->service_package)[$key]->termofpaymentDeals) }}">
                                                     </div>
                                                     <div class="mb-3 row">
                                                         <label for="package_top" class="col-sm-6 col-form-label">Promo
@@ -754,6 +762,26 @@
     <script src="{{ URL::to('bin/js/newCustomer/bussiness/inputmask.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(() => {
+            const value = (harga) => {
+                return new Intl.NumberFormat('de-DE', {
+                    style: 'currency',
+                    currency: 'EUR',
+                }).formatToParts(harga).map(
+                    p => p.type != 'literal' && p.type != 'currency' ? p.value : ''
+                ).join('')
+            };
+
+            const hargaRealPaket = $('#package_price_cache').val();
+            var hargaUntukHitungan = hargaRealPaket;
+            $('#package_price').val(value(hargaRealPaket));
+
+            $('#package_top').on('input', function() {
+                if ($(this).val() != "" && $(this).val() != 0) {
+                    $('#package_price').val(value($(this).val() * hargaRealPaket));
+                    hargaUntukHitungan = $(this).val() * hargaRealPaket;
+                }
+            });
+
             const date = new Date;
             $('#btnSubmitPromo').on('click', () => {
                 var isError = false;
@@ -761,43 +789,67 @@
                 const PromoArr = {!! json_encode($fetchAllDataPromo) !!};
                 const kodePromo = $('#package_promo').val();
                 const namaPaket = $('#package_name').val();
-                const hargaPaket = $('#package_price').val();
+                const hargaPaket = hargaUntukHitungan;
                 const jangkaWaktuPaket = $('#package_top').val();
-                if (jangkaWaktuPaket.split(' ')[0] >= 12) {
+                if (jangkaWaktuPaket >= 12) {
                     statusPaket = "Tahunan";
                 }
                 const arrNamaPaket = namaPaket.split(' ');
 
-                PromoArr.forEach(element => {
-                    if (element.promo_code == kodePromo) {
-                        if (isSame(namaPaket, element.package_name) && element.package_top ==
-                            statusPaket) {
-                            var persenDiscount = element.discount_cut != '-' ? element
-                                .discount_cut / 100 : 0;
-                            if (element.monthly_cut_status == "Penambahan") {
-                                $('#package_price').val(hargaPaket - (hargaPaket *
-                                    persenDiscount));
-                                $('#package_top').val((jangkaWaktuPaket.split(' ')[0] + element
-                                    .monthly_cut) + ' Bulan');
-                            } else if (element.monthly_cut_status == "Pengurangan") {
-                                if (jangkaWaktuPaket.split(' ')[0] <= element
-                                    .monthly_cut) {
-                                    isError = true;
+                if (PromoArr.length > 0) {
+                    PromoArr.forEach(element => {
+                        if (element.promo_code == kodePromo) {
+                            if (isSame(namaPaket, element.package_name) && element.package_top ==
+                                statusPaket) {
+                                isError = false;
+
+                                var persenDiscount = element.discount_cut != '-' ? element
+                                    .discount_cut / 100 : 0;
+
+                                if (element.monthly_cut_status == "Penambahan") {
+                                    $('#package_price').val(value(hargaPaket - (hargaPaket *
+                                        persenDiscount)));
+                                    hargaUntukHitungan = hargaPaket - (hargaPaket *
+                                        persenDiscount);
+                                    $('#package_top').val((jangkaWaktuPaket + element
+                                        .monthly_cut));
+                                } else if (element.monthly_cut_status == "Pengurangan") {
+                                    if (jangkaWaktuPaket <= element
+                                        .monthly_cut) {
+                                        isError = true;
+                                    } else {
+                                        $('#package_price').val(value(hargaPaket - (hargaPaket *
+                                            persenDiscount)));
+                                        hargaUntukHitungan = hargaPaket - (hargaPaket *
+                                            persenDiscount);
+                                        $('#package_top').val((jangkaWaktuPaket -
+                                            element
+                                            .monthly_cut));
+                                    }
                                 } else {
-                                    $('#package_price').val(hargaPaket - (hargaPaket *
-                                        persenDiscount));
-                                    $('#package_top').val((jangkaWaktuPaket.split(' ')[0] -
-                                        element
-                                        .monthly_cut) + ' Bulan');
+                                    if (jangkaWaktuPaket <= element
+                                        .monthly_cut) {
+                                        isError = true;
+                                    } else {
+                                        $('#package_price').val(value(hargaPaket - (hargaPaket *
+                                            persenDiscount)));
+                                        hargaUntukHitungan = hargaPaket - (hargaPaket *
+                                            persenDiscount);
+                                        $('#package_top').val((jangkaWaktuPaket -
+                                            element
+                                            .monthly_cut));
+                                    }
                                 }
+                            } else {
+                                isError = true;
                             }
                         } else {
                             isError = true;
                         }
-                    } else {
-                        isError = true;
-                    }
-                });
+                    });
+                } else {
+                    isError = true;
+                }
 
                 if (isError) {
                     alert('Maaf, Kode Promo Tidak Ditemukan!, Silahkan coba lagi.');

@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('promo_code');
             $table->string('package_name');
             $table->enum('package_top', ['Bulanan', 'Tahunan']);
-            $table->string('discount_cut');
-            $table->string('monthly_cut');
-            $table->string('monthly_cut_status');
+            $table->string('discount_cut')->nullable();
+            $table->string('monthly_cut')->nullable();
+            $table->string('monthly_cut_status')->nullable();
             $table->dateTime('activate_date');
             $table->dateTime('expired_date');
             $table->timestamps();

@@ -122,7 +122,7 @@ class DataPenggunaController extends Controller
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil ditambahkan.');
             } catch (\Throwable $th) {
-                return back()->withInput()->with('errorMessage', 'Data pengguna gagal ditambahkan.');
+                return back()->withInput()->with('errorMessage', $th->getMessage());
             }
         } else {
             try {
@@ -138,7 +138,7 @@ class DataPenggunaController extends Controller
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil ditambahkan.');
             } catch (\Throwable $th) {
-                return back()->withInput()->with('errorMessage', 'Data pengguna gagal ditambahkan.');
+                return back()->withInput()->with('errorMessage', $th->getMessage());
             }
         }
     }
@@ -238,7 +238,7 @@ class DataPenggunaController extends Controller
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil diubah.');
             } catch (\Throwable $th) {
-                return back()->withInput()->with('errorMessage', 'Data pengguna gagal diubah.');
+                return back()->withInput()->with('errorMessage', $th->getMessage());
             }
         } else {
             try {
@@ -254,7 +254,7 @@ class DataPenggunaController extends Controller
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil diubah.');
             } catch (\Throwable $th) {
-                return back()->withInput()->with('errorMessage', 'Data pengguna gagal diubah.');
+                return back()->withInput()->with('errorMessage', $th->getMessage());
             }
         }
     }
@@ -273,7 +273,7 @@ class DataPenggunaController extends Controller
 
             return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil dihapus.');
         } catch (\Throwable $th) {
-            return back()->withInput()->with('errorMessage', 'Data pengguna gagal dihapus.');
+            return back()->withInput()->with('errorMessage', $th->getMessage());
         }
     }
 }

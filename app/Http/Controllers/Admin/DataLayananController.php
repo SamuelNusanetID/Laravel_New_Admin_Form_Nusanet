@@ -81,7 +81,7 @@ class DataLayananController extends Controller
 
             return redirect()->to('data-layanan')->with('successMessage', 'Data layanan berhasil ditambahkan.');
         } catch (\Throwable $th) {
-            return back()->withInput()->with('errorMessage', json_encode($th->getMessage()));
+            return back()->withInput()->with('errorMessage', $th->getMessage());
         }
     }
 
@@ -157,7 +157,7 @@ class DataLayananController extends Controller
 
             return redirect()->to('data-layanan')->with('successMessage', 'Data layanan berhasil diubah.');
         } catch (\Throwable $th) {
-            return back()->withInput()->with('errorMessage', json_encode($th->getMessage()));
+            return back()->withInput()->with('errorMessage', $th->getMessage());
         }
     }
 
@@ -175,7 +175,7 @@ class DataLayananController extends Controller
 
             return redirect()->to('data-layanan')->with('successMessage', 'Data layanan berhasil dihapus.');
         } catch (\Throwable $th) {
-            return back()->withInput()->with('errorMessage', json_encode($th->getMessage()));
+            return back()->withInput()->with('errorMessage', $th->getMessage());
         }
     }
 }

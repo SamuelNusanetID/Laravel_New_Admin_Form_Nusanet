@@ -141,7 +141,7 @@
                                     </div>
                                     <div class="mb-3">
                                         @php
-                                            $monthlyStat = ['Penambahan', 'Pengurangan'];
+                                            $monthlyStat = ['None', 'Penambahan', 'Pengurangan'];
                                         @endphp
                                         <label for="monthly_cut_status" class="form-label">
                                             Kriteria Promo

@@ -97,7 +97,7 @@ class DataPromoController extends Controller
 
             return redirect()->to('data-promo')->with('successMessage', 'Data promo berhasil ditambahkan.');
         } catch (\Throwable $th) {
-            return back()->withInput()->with('errorMessage', 'Data promo gagal ditambahkan.');
+            return back()->withInput()->with('errorMessage', $th->getMessage());
         }
     }
 
@@ -188,7 +188,7 @@ class DataPromoController extends Controller
 
             return redirect()->to('data-promo')->with('successMessage', 'Data promo berhasil diubah.');
         } catch (\Throwable $th) {
-            return back()->withInput()->with('errorMessage', 'Data promo gagal diubah.');
+            return back()->withInput()->with('errorMessage', $th->getMessage());
         }
     }
 
@@ -205,7 +205,7 @@ class DataPromoController extends Controller
             $deletePromo->delete();
             return redirect()->to('data-promo')->with('successMessage', 'Data promo berhasil dihapus.');
         } catch (\Throwable $th) {
-            return back()->withInput()->with('errorMessage', 'Data promo gagal dihapus.');
+            return back()->withInput()->with('errorMessage', $th->getMessage());
         }
     }
 }
