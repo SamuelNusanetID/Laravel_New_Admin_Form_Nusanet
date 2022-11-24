@@ -50,6 +50,7 @@
                                             <th class="align-middle text-center">Nama Karyawan</th>
                                             <th class="align-middle text-center">Email Karyawan</th>
                                             <th class="align-middle text-center">Manager</th>
+                                            <th class="align-middle text-center">Aturan Pengguna</th>
                                             <th class="align-middle text-center"></th>
                                         </tr>
                                     </thead>
@@ -64,6 +65,27 @@
                                                 <td class="align-middle">{{ $item->name }}</td>
                                                 <td class="align-middle text-center">{{ $item->email }}</td>
                                                 <td class="align-middle text-center">{{ $item->pic_name }}</td>
+                                                @switch($item->utype)
+                                                    @case('AuthMaster')
+                                                        <td class="align-middle text-center">Administrator</td>
+                                                    @break
+
+                                                    @case('AuthCRO')
+                                                        <td class="align-middle text-center">Customer Relation Officer</td>
+                                                    @break
+
+                                                    @case('AuthSalesManager')
+                                                        <td class="align-middle text-center">Sales Manager</td>
+                                                    @break
+
+                                                    @case('AuthSales')
+                                                        <td class="align-middle text-center">Sales</td>
+                                                    @break
+
+                                                    @default
+                                                        <td class="align-middle text-center">None</td>
+                                                @endswitch
+
                                                 <td class="align-middle text-center">
                                                     <a href="{{ URL::to('data-pengguna/' . $item->id . '/edit') }}"
                                                         class="btn btn-warning text-white">
