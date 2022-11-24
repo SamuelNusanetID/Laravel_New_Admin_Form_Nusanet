@@ -38,10 +38,12 @@
                                 </h6>
                             </div>
                             <div class="card-body">
-                                <a href="{{ URL::to('data-promo/create') }}" class="btn btn-primary mb-3">
-                                    <i class="fas fa-plus-circle me-1"></i>
-                                    Tambah {{ $titlePage }}
-                                </a>
+                                @can('AuthMaster')
+                                    <a href="{{ URL::to('data-promo/create') }}" class="btn btn-primary mb-3">
+                                        <i class="fas fa-plus-circle me-1"></i>
+                                        Tambah {{ $titlePage }}
+                                    </a>
+                                @endcan
                                 <table class="table table-bordered" id="dataTableDataPromo" style="width: 100%;">
                                     <thead class="bg-success">
                                         <tr>
@@ -54,7 +56,9 @@
                                             <th class="align-middle text-center">Kriteria Promo</th>
                                             <th class="align-middle text-center">Tanggal Aktif Promo</th>
                                             <th class="align-middle text-center">Tanggal Berakhir Promo</th>
-                                            <th class="align-middle text-center"></th>
+                                            @can('AuthMaster')
+                                                <th class="align-middle text-center"></th>
+                                            @endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -72,19 +76,21 @@
                                                 <td class="align-middle text-center">{{ $item->monthly_cut_status }}</td>
                                                 <td class="align-middle text-center">{{ $item->activate_date }}</td>
                                                 <td class="align-middle text-center">{{ $item->expired_date }}</td>
-                                                <td class="align-middle text-center">
-                                                    <a href="{{ URL::to('data-promo/' . $item->id . '/edit') }}"
-                                                        class="btn btn-warning text-white">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <form action="{{ URL::to('data-promo/' . $item->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger">
-                                                            <i class="fas fa-trash-alt me-1"></i>
-                                                        </button>
-                                                    </form>
-                                                </td>
+                                                @can('AuthMaster')
+                                                    <td class="align-middle text-center">
+                                                        <a href="{{ URL::to('data-promo/' . $item->id . '/edit') }}"
+                                                            class="btn btn-warning text-white">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <form action="{{ URL::to('data-promo/' . $item->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger">
+                                                                <i class="fas fa-trash-alt me-1"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                @endcan
                                             </tr>
                                             @php
                                                 $i++;

@@ -32,7 +32,7 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header bg-success">
-                                <h3 class="card-title">
+                                <h3 class="card-title mb-3 mb-sm-0">
                                     <i class="fas fa-info-circle me-1"></i>
                                     Informasi Data Pelanggan
                                 </h3>

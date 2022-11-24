@@ -38,10 +38,12 @@
                                 </h6>
                             </div>
                             <div class="card-body">
-                                <a href="{{ URL::to('data-layanan/create') }}" class="btn btn-primary mb-3">
-                                    <i class="fas fa-plus-circle me-1"></i>
-                                    Tambah {{ $titlePage }}
-                                </a>
+                                @can('AuthMaster')
+                                    <a href="{{ URL::to('data-layanan/create') }}" class="btn btn-primary mb-3">
+                                        <i class="fas fa-plus-circle me-1"></i>
+                                        Tambah {{ $titlePage }}
+                                    </a>
+                                @endcan
                                 <table class="table table-bordered" id="dataTableDataLayanan">
                                     <thead class="bg-success">
                                         <tr>
@@ -54,7 +56,9 @@
                                             <th class="align-middle text-center">Harga Retail Paket</th>
                                             <th class="align-middle text-center">Harga Pemerintah Paket</th>
                                             <th class="align-middle text-center">Catatan</th>
-                                            <th class="align-middle text-center"></th>
+                                            @can('AuthMaster')
+                                                <th class="align-middle text-center"></th>
+                                            @endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -77,20 +81,22 @@
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     {{ $item->noted_service ? $item->noted_service : '-' }}</td>
-                                                <td class="align-middle">
-                                                    <a href="{{ URL::to('data-layanan/' . $item->id . '/edit') }}"
-                                                        class="btn btn-warning text-white">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <form action="{{ URL::to('data-layanan/' . $item->id) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger">
-                                                            <i class="fas fa-trash-alt me-1"></i>
-                                                        </button>
-                                                    </form>
-                                                </td>
+                                                @can('AuthMaster')
+                                                    <td class="align-middle">
+                                                        <a href="{{ URL::to('data-layanan/' . $item->id . '/edit') }}"
+                                                            class="btn btn-warning text-white">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <form action="{{ URL::to('data-layanan/' . $item->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger">
+                                                                <i class="fas fa-trash-alt me-1"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                @endcan
                                             </tr>
                                             @php
                                                 $i++;
