@@ -486,4 +486,73 @@
             }
         });
     </script>
+    <!-- Modal Validation -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const listDataPelanggan = {!! json_encode($dataPelanggan) !!};
+
+            listDataPelanggan.forEach(element => {
+                $(`#approvalRequestForm-${element.id}`).validate({
+                    errorPlacement: (error, element) => {
+                        if (element.parent('.input-group').length) {
+                            error.insertAfter(element.parent());
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    },
+                    rules: {
+                        message_body_notification: {
+                            required: true
+                        },
+                    },
+                    messages: {
+                        message_body_notification: {
+                            required: 'Field Deskripsi Pesan Wajib Diisi'
+                        },
+                    }
+                });
+
+                $(`#submittedBtnApproval-${element.id}`).on('click', () => {
+                    const statusValidationApproval = $(`#approvalRequestForm-${element.id}`)
+                        .valid();
+
+                    if (statusValidationApproval) {
+                        $(`#approvalRequestForm-${element.id}`).trigger('submit');
+                    }
+                });
+
+                $(`#rejectedRequestForm-${element.id}`).validate({
+                    errorPlacement: (error, element) => {
+                        if (element.parent('.input-group').length) {
+                            error.insertAfter(element.parent());
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    },
+                    rules: {
+                        message_body_notification: {
+                            required: true
+                        },
+                    },
+                    messages: {
+                        message_body_notification: {
+                            required: 'Field Deskripsi Pesan Wajib Diisi'
+                        },
+                    }
+                });
+
+                $(`#submittedBtnRejected-${element.id}`).on('click', () => {
+                    const statusValidationApproval = $(`#rejectedRequestForm-${element.id}`).valid();
+
+                    if (statusValidationApproval) {
+                        $(`#rejectedRequestForm-${element.id}`).trigger('submit');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

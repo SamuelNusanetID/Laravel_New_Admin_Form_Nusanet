@@ -482,7 +482,7 @@ class DataPelangganController extends Controller
                         'customer_name' => $dataCustomer->name,
                         'status' => 'disetujui',
                         'notif_sender' => auth()->user()->name,
-                        'message_body' => 'Pesan disini',
+                        'message_body' => $request->get('message_body_notification'),
                         'send_to' => $resJSON->email,
                         'subject_email' => 'Pemberitahuan progress data pelanggan'
                     ];
@@ -508,7 +508,7 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthCRO->isRejected = false;
 
                 // Ambil Message dari Modal
-                $oldDataJSON->{$utype}->message = "Dokumen Telah Disetujui";
+                $oldDataJSON->{$utype}->message = $request->get('message_body_notification');
 
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
@@ -538,7 +538,7 @@ class DataPelangganController extends Controller
                                 'customer_name' => $dataCustomer->name,
                                 'status' => 'disetujui',
                                 'notif_sender' => auth()->user()->name,
-                                'message_body' => 'Pesan disini',
+                                'message_body' => $request->get('message_body_notification'),
                                 'send_to' => $resJSON->email,
                                 'subject_email' => 'Pemberitahuan progress data pelanggan'
                             ];
@@ -564,7 +564,7 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthCRO->isRejected = false;
 
                 // Ambil Message dari Modal
-                $oldDataJSON->{$utype}->message = "Dokumen Telah Disetujui";
+                $oldDataJSON->{$utype}->message = $request->get('message_body_notification');
 
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
@@ -581,7 +581,7 @@ class DataPelangganController extends Controller
                 $oldDataJSON->{$utype}->isRejected = false;
 
                 // Ambil Message dari Modal
-                $oldDataJSON->{$utype}->message = "Dokumen Telah Disetujui";
+                $oldDataJSON->{$utype}->message = $request->get('message_body_notification');
 
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
@@ -627,7 +627,7 @@ class DataPelangganController extends Controller
                                 'customer_name' => $dataCustomer->name,
                                 'status' => 'ditolak',
                                 'notif_sender' => auth()->user()->name,
-                                'message_body' => 'Pesan disini',
+                                'message_body' => $request->get('message_body_notification'),
                                 'send_to' => $resJSON->email,
                                 'subject_email' => 'Pemberitahuan progress data pelanggan'
                             ];
@@ -653,7 +653,7 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthSales->isRejected = false;
 
                 // Ambil dari Modal
-                $oldDataJSON->{$utype}->message = "Dokumen telah ditolak";
+                $oldDataJSON->{$utype}->message = $request->get('message_body_notification');
 
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
@@ -663,8 +663,6 @@ class DataPelangganController extends Controller
                 $dataCustomer->approval->array_approval = json_encode($oldDataJSON);
                 break;
             case 'AuthCRO':
-                $mailToProcess = "AuthSales";
-
                 $oldData = $dataCustomer->approval->array_approval;
                 $oldDataJSON = json_decode($oldData);
                 $oldDataJSON->{$utype}->PIC_Name = auth()->user()->name;
@@ -679,7 +677,7 @@ class DataPelangganController extends Controller
                 $oldDataJSON->AuthSales->isRejected = false;
 
                 // Ambil Dari Modal
-                $oldDataJSON->{$utype}->message = "Dokumen telah ditolak";
+                $oldDataJSON->{$utype}->message = $request->get('message_body_notification');
 
                 $oldDataJSON->{$utype}->sended_at = Carbon::now();
                 $oldDataJSON->{$utype}->replied_at = Carbon::now();
