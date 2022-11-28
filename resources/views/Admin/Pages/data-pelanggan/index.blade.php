@@ -190,12 +190,7 @@
                                                                             @include('Admin.Pages.data-pelanggan.modals.' .
                                                                                     $cls .
                                                                                     '.layouts.index')
-                                                                            @can('AuthMaster')
-                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
-                                                                                    class="btn btn-warning">
-                                                                                    <i class="fas fa-edit text-white"></i>
-                                                                                </a>
-                                                                            @elsecan('AuthSales')
+                                                                            @can('AuthSales')
                                                                                 @if ($pelanggan->approval->next_staging_area != null)
                                                                                     @if ($pelanggan->approval->current_staging_area == 'AuthSales')
                                                                                         <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
@@ -239,6 +234,10 @@
                                                                                         <i class="fas fa-edit text-white"></i>
                                                                                     </a>
                                                                                 @endif
+                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/download') }}"
+                                                                                    class="btn btn-info">
+                                                                                    <i class="fas fa-download"></i>
+                                                                                </a>
                                                                             @endcan
                                                                         </div>
                                                                     </td>
@@ -371,12 +370,7 @@
                                                                                     $cls .
                                                                                     '.layouts.index')
 
-                                                                            @can('AuthMaster')
-                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
-                                                                                    class="btn btn-warning">
-                                                                                    <i class="fas fa-edit text-white"></i>
-                                                                                </a>
-                                                                            @elsecan('AuthSales')
+                                                                            @can('AuthSales')
                                                                                 @if ($pelanggan->approval->next_staging_area != null)
                                                                                     @if ($pelanggan->approval->current_staging_area == 'AuthSales')
                                                                                         <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/edit') }}"
@@ -420,6 +414,10 @@
                                                                                         <i class="fas fa-edit text-white"></i>
                                                                                     </a>
                                                                                 @endif
+                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/download') }}"
+                                                                                    class="btn btn-info">
+                                                                                    <i class="fas fa-download"></i>
+                                                                                </a>
                                                                             @endcan
                                                                         </div>
                                                                     </td>
@@ -546,7 +544,8 @@
                 });
 
                 $(`#submittedBtnRejected-${element.id}`).on('click', () => {
-                    const statusValidationApproval = $(`#rejectedRequestForm-${element.id}`).valid();
+                    const statusValidationApproval = $(`#rejectedRequestForm-${element.id}`)
+                        .valid();
 
                     if (statusValidationApproval) {
                         $(`#rejectedRequestForm-${element.id}`).trigger('submit');

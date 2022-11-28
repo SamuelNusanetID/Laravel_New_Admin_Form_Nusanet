@@ -695,4 +695,9 @@ class DataPelangganController extends Controller
 
         return back()->with('successMessage', 'Berhasil mengupdate timeline.');
     }
+
+    public function downloadPDFCustomer($id_pelanggan)
+    {
+        dd($id_pelanggan);
+    }
 }
