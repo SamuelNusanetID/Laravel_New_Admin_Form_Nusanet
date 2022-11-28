@@ -1,5 +1,11 @@
 @extends('Admin.Layouts.main')
 
+@section('addoncss')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.3.1/css/rowReorder.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css">
+@endsection
+
 @section('content-wrapper')
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -24,250 +30,87 @@
             <div class="container-fluid">
                 @can('AuthMaster')
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header border-0">
                                     <div class="d-flex justify-content-between">
-                                        <h3 class="card-title">Online Store Visitors</h3>
-                                        <a href="javascript:void(0);">View Report</a>
+                                        <h3 class="card-title">Statistik Pelanggan Baru</h3>
+                                        <h3 class="card-title">Tanggal : {{ date('d-m-Y') }}</h3>
                                     </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex">
                                         <p class="d-flex flex-column">
-                                            <span class="text-bold text-lg">820</span>
-                                            <span>Visitors Over Time</span>
-                                        </p>
-                                        <p class="ml-auto d-flex flex-column text-right">
-                                            <span class="text-success">
-                                                <i class="fas fa-arrow-up"></i> 12.5%
-                                            </span>
-                                            <span class="text-muted">Since last week</span>
+                                            <span class="text-bold text-lg">{{ $jumlahPelangganBaru }}</span>
+                                            <span>Total Pelanggan Baru</span>
                                         </p>
                                     </div>
                                     <!-- /.d-flex -->
 
                                     <div class="position-relative mb-4">
-                                        <canvas id="visitors-chart" height="200"></canvas>
-                                    </div>
-
-                                    <div class="d-flex flex-row justify-content-end">
-                                        <span class="mr-2">
-                                            <i class="fas fa-square text-primary"></i> This Week
-                                        </span>
-
-                                        <span>
-                                            <i class="fas fa-square text-gray"></i> Last Week
-                                        </span>
+                                        <canvas id="new-customer-chart" height="80"></canvas>
                                     </div>
                                 </div>
                             </div>
-                            <!-- /.card -->
 
                             <div class="card">
                                 <div class="card-header border-0">
-                                    <h3 class="card-title">Products</h3>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-tool btn-sm">
-                                            <i class="fas fa-download"></i>
-                                        </a>
-                                        <a href="#" class="btn btn-tool btn-sm">
-                                            <i class="fas fa-bars"></i>
-                                        </a>
+                                    <div class="d-flex justify-content-between">
+                                        <h3 class="card-title">Statistik Pelanggan Baru Yang Masuk Ke IS</h3>
+                                        <h3 class="card-title">Tanggal : {{ date('d-m-Y') }}</h3>
                                     </div>
                                 </div>
-                                <div class="card-body table-responsive p-0">
-                                    <table class="table table-striped table-valign-middle">
-                                        <thead>
+                                <div class="card-body">
+                                    <div class="d-flex">
+                                        <p class="d-flex flex-column">
+                                            <span class="text-bold text-lg">{{ $jumlahPelangganApproved }}</span>
+                                            <span>Total Pelanggan Baru Yang Masuk Ke IS</span>
+                                        </p>
+                                    </div>
+                                    <!-- /.d-flex -->
+
+                                    <div class="position-relative mb-4">
+                                        <canvas id="is-customer-chart" height="80"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header border-0">
+                                    <div class="d-flex justify-content-between">
+                                        <h3 class="card-title">List Promo Yang Sedang Aktif</h3>
+                                        <h3 class="card-title">Tanggal : {{ date('d-m-Y') }}</h3>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered" id="dataTablesDashboard">
+                                        <thead class="bg-success">
                                             <tr>
-                                                <th>Product</th>
-                                                <th>Price</th>
-                                                <th>Sales</th>
-                                                <th>More</th>
+                                                <th>No.</th>
+                                                <th>Kode Promo</th>
+                                                <th>Nama Paket</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                        class="img-circle img-size-32 mr-2">
-                                                    Some Product
-                                                </td>
-                                                <td>$13 USD</td>
-                                                <td>
-                                                    <small class="text-success mr-1">
-                                                        <i class="fas fa-arrow-up"></i>
-                                                        12%
-                                                    </small>
-                                                    12,000 Sold
-                                                </td>
-                                                <td>
-                                                    <a href="#" class="text-muted">
-                                                        <i class="fas fa-search"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                        class="img-circle img-size-32 mr-2">
-                                                    Another Product
-                                                </td>
-                                                <td>$29 USD</td>
-                                                <td>
-                                                    <small class="text-warning mr-1">
-                                                        <i class="fas fa-arrow-down"></i>
-                                                        0.5%
-                                                    </small>
-                                                    123,234 Sold
-                                                </td>
-                                                <td>
-                                                    <a href="#" class="text-muted">
-                                                        <i class="fas fa-search"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                        class="img-circle img-size-32 mr-2">
-                                                    Amazing Product
-                                                </td>
-                                                <td>$1,230 USD</td>
-                                                <td>
-                                                    <small class="text-danger mr-1">
-                                                        <i class="fas fa-arrow-down"></i>
-                                                        3%
-                                                    </small>
-                                                    198 Sold
-                                                </td>
-                                                <td>
-                                                    <a href="#" class="text-muted">
-                                                        <i class="fas fa-search"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                        class="img-circle img-size-32 mr-2">
-                                                    Perfect Item
-                                                    <span class="badge bg-danger">NEW</span>
-                                                </td>
-                                                <td>$199 USD</td>
-                                                <td>
-                                                    <small class="text-success mr-1">
-                                                        <i class="fas fa-arrow-up"></i>
-                                                        63%
-                                                    </small>
-                                                    87 Sold
-                                                </td>
-                                                <td>
-                                                    <a href="#" class="text-muted">
-                                                        <i class="fas fa-search"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                            @php
+                                                $i = 1;
+                                            @endphp
+                                            @foreach ($dataPromo as $item)
+                                                <tr>
+                                                    <td>{{ $i }}</td>
+                                                    <td>{{ $item->promo_code }}</td>
+                                                    <td>{{ $item->package_name }}</td>
+                                                </tr>
+                                                @php
+                                                    $i++;
+                                                @endphp
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             <!-- /.card -->
                         </div>
-                        <!-- /.col-md-6 -->
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header border-0">
-                                    <div class="d-flex justify-content-between">
-                                        <h3 class="card-title">Sales</h3>
-                                        <a href="javascript:void(0);">View Report</a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <p class="d-flex flex-column">
-                                            <span class="text-bold text-lg">$18,230.00</span>
-                                            <span>Sales Over Time</span>
-                                        </p>
-                                        <p class="ml-auto d-flex flex-column text-right">
-                                            <span class="text-success">
-                                                <i class="fas fa-arrow-up"></i> 33.1%
-                                            </span>
-                                            <span class="text-muted">Since last month</span>
-                                        </p>
-                                    </div>
-                                    <!-- /.d-flex -->
-
-                                    <div class="position-relative mb-4">
-                                        <canvas id="sales-chart" height="200"></canvas>
-                                    </div>
-
-                                    <div class="d-flex flex-row justify-content-end">
-                                        <span class="mr-2">
-                                            <i class="fas fa-square text-primary"></i> This year
-                                        </span>
-
-                                        <span>
-                                            <i class="fas fa-square text-gray"></i> Last year
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.card -->
-
-                            <div class="card">
-                                <div class="card-header border-0">
-                                    <h3 class="card-title">Online Store Overview</h3>
-                                    <div class="card-tools">
-                                        <a href="#" class="btn btn-sm btn-tool">
-                                            <i class="fas fa-download"></i>
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-tool">
-                                            <i class="fas fa-bars"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                                        <p class="text-success text-xl">
-                                            <i class="ion ion-ios-refresh-empty"></i>
-                                        </p>
-                                        <p class="d-flex flex-column text-right">
-                                            <span class="font-weight-bold">
-                                                <i class="ion ion-android-arrow-up text-success"></i> 12%
-                                            </span>
-                                            <span class="text-muted">CONVERSION RATE</span>
-                                        </p>
-                                    </div>
-                                    <!-- /.d-flex -->
-                                    <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                                        <p class="text-warning text-xl">
-                                            <i class="ion ion-ios-cart-outline"></i>
-                                        </p>
-                                        <p class="d-flex flex-column text-right">
-                                            <span class="font-weight-bold">
-                                                <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
-                                            </span>
-                                            <span class="text-muted">SALES RATE</span>
-                                        </p>
-                                    </div>
-                                    <!-- /.d-flex -->
-                                    <div class="d-flex justify-content-between align-items-center mb-0">
-                                        <p class="text-danger text-xl">
-                                            <i class="ion ion-ios-people-outline"></i>
-                                        </p>
-                                        <p class="d-flex flex-column text-right">
-                                            <span class="font-weight-bold">
-                                                <i class="ion ion-android-arrow-down text-danger"></i> 1%
-                                            </span>
-                                            <span class="text-muted">REGISTRATION RATE</span>
-                                        </p>
-                                    </div>
-                                    <!-- /.d-flex -->
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.col-md-6 -->
                     </div>
                 @endcan
 
@@ -277,4 +120,138 @@
         </div>
         <!-- /.content -->
     </div>
+@endsection
+
+@section('addonjs')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+        integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/rowreorder/1.3.1/js/dataTables.rowReorder.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <!--Chart.js JS CDN-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script>
+        $(document).ready(() => {
+            $(`#dataTablesDashboard`).DataTable({
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true
+            });
+
+            var today = new Date();
+            var labelGraph = [];
+            getDaysInMonth(today.getMonth(), today.getFullYear()).forEach(element => {
+                labelGraph.push(element.getDate());
+            });
+
+            // Get Data Pelanggan Baru
+            var getDataPelangganBaru = {!! json_encode($dataPelangganBaru) !!}
+            var dataPelangganBaru = [];
+            getDataPelangganBaru.forEach(element => {
+                element.created_at = new Date(element.created_at);
+                dataPelangganBaru.push(element.created_at.getDate());
+            });
+
+            var filterDataPelangganBaru = jumlahDataPelangganBaru(dataPelangganBaru);
+            var labelyValuesNewCS = [];
+            labelGraph.forEach(element => {
+                if (typeof filterDataPelangganBaru[element] !== 'undefined') {
+                    labelyValuesNewCS.push(filterDataPelangganBaru[element]);
+                } else {
+                    labelyValuesNewCS.push(0);
+                }
+            })
+
+            // Statistik untuk pelanggan baru
+            var xValues = labelGraph;
+            var yValues = labelyValuesNewCS;
+
+            var ctx = document.getElementById('new-customer-chart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        data: yValues,
+                        borderColor: "rgb(62,149,205)",
+                        backgroundColor: "rgb(62,149,205,0.1)",
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        enabled: false
+                    }
+                }
+            });
+
+            // Get Data Pelanggan IS
+            var getDataPelangganIS = {!! json_encode($dataPelangganApproved) !!}
+            var dataPelangganIS = [];
+            getDataPelangganIS.forEach(element => {
+                element.created_at = new Date(element.created_at);
+                dataPelangganIS.push(element.created_at.getDate());
+            });
+
+            var filterDataPelangganIS = jumlahDataPelangganBaru(dataPelangganIS);
+            var labelyValuesISCS = [];
+            labelGraph.forEach(element => {
+                if (typeof filterDataPelangganIS[element] !== 'undefined') {
+                    labelyValuesISCS.push(filterDataPelangganIS[element]);
+                } else {
+                    labelyValuesISCS.push(0);
+                }
+            })
+
+            // Statistik untuk pelanggan baru IS
+            var xValues = labelGraph;
+            var yValues = labelyValuesISCS;
+
+            var ctx = document.getElementById('is-customer-chart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        data: yValues,
+                        borderColor: "rgb(62,149,205)",
+                        backgroundColor: "rgb(62,149,205,0.1)",
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        enabled: false
+                    }
+                }
+            });
+        });
+
+        function jumlahDataPelangganBaru(arrayDataPelangganBaru) {
+            var counts = {};
+
+            for (var i = 0; i < arrayDataPelangganBaru.length; i++) {
+                var key = arrayDataPelangganBaru[i];
+                counts[key] = (counts[key]) ? counts[key] + 1 : 1;
+            }
+
+            return counts;
+        }
+
+        function getDaysInMonth(month, year) {
+            var date = new Date(year, month, 1);
+            var days = [];
+            while (date.getMonth() === month) {
+                days.push(new Date(date));
+                date.setDate(date.getDate() + 1);
+            }
+            return days;
+        }
+    </script>
 @endsection
