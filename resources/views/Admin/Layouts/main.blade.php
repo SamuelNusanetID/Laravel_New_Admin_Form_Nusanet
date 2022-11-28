@@ -66,10 +66,11 @@
 
     @yield('addonjs')
 
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    {{-- <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
         $('#decisionBtnYesFeedback').on('click', () => {
-            alert('This Button Triggered');
+            $('#firstModal').modal('hide');
+            $('#secondModal').modal('show');
             // const screenshotTarget = document.body;
 
             // html2canvas(screenshotTarget).then((canvas) => {
@@ -88,7 +89,7 @@
             //     const url = canvas.toDataURL("image/png");
             // });
         });
-    </script>
+    </script> --}}
 </body>
 
 </html>

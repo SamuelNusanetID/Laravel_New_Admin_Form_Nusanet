@@ -28,11 +28,10 @@
                     </a>
                 </li>
                 <li>
-                    <button type="button" class="btn dropdown-item" data-bs-toggle="modal"
-                        data-bs-target="#firstModal">
+                    <a class="dropdown-item" href="https://s.id/feedbackformregonline">
                         <i class="fas fa-comments me-1"></i>
                         Feedback
-                    </button>
+                    </a>
                 </li>
                 <li>
                     <hr class="dropdown-divider">
@@ -50,58 +49,3 @@
         </li>
     </ul>
 </nav>
-
-<!-- Modal -->
-<div class="modal fade" id="firstModal" tabindex="-1" aria-labelledby="firstModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-success">
-                <h1 class="modal-title fs-5" id="firstModalLabel">Konfirmasi Feedback</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Apakah kendala anda terdapat di layar ini ?
-            </div>
-            <div class="modal-footer bg-success">
-                <button type="button" class="btn btn-danger" id="decisionBtnNoFeedback">Tidak</button>
-                <button type="button" class="btn btn-primary" id="decisionBtnYesFeedback">
-                    Ya, Benar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="secondModal" tabindex="-1" aria-labelledby="secondModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-success">
-                <h1 class="modal-title fs-5" id="secondModalLabel">Form Feedback</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Apakah kendala anda terdapat di layar ini ?
-            </div>
-            <div class="modal-footer bg-success">
-
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="thirdModal" tabindex="-1" aria-labelledby="thirdModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-success">
-                <h1 class="modal-title fs-5" id="thirdModalLabel">Form Feedback</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Apakah kendala anda terdapat di layar ini ?
-            </div>
-            <div class="modal-footer bg-success">
-
-            </div>
-        </div>
-    </div>
-</div>

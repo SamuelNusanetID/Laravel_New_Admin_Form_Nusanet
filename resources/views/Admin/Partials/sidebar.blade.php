@@ -15,7 +15,7 @@
                     class="img-circle elevation-2" alt="User Image" style="height: 2em; width: 2em;">
             </div>
             <div class="info">
-                <a href="#"
+                <a href="{{ URL::to('profil-saya') }}"
                     class="d-block">{{ implode(' ', [explode(' ', auth()->user()->name)[0], explode(' ', auth()->user()->name)[1]]) }}</a>
             </div>
         </div>
