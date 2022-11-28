@@ -33,8 +33,8 @@
                             </div>
                             <div class="card-body">
                                 <form class="d-flex align-items-center justify-content-center flex-column"
-                                    action="{{ URL::to('profil-saya/' . auth()->user()->id) }}" method="POST"
-                                    enctype="multipart/form-data" style="width: 100%;">
+                                    action="{{ URL::to('profil-saya') }}" method="POST" enctype="multipart/form-data"
+                                    style="width: 100%;">
                                     @csrf
                                     <div class="mb-5 text-center" style="width: 40%;">
                                         <img class="img-circle elevation-2 mb-4"
