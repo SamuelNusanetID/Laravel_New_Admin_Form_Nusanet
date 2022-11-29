@@ -12,7 +12,9 @@ class Approval extends Model
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     protected $fillable = [
-        'staging_area',
-        'array_approval'
+        'current_staging_area',
+        'next_staging_area',
+        'array_approval',
+        'isSendedtoIS'
     ];
 }

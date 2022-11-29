@@ -19,7 +19,7 @@
                 @include('Admin.Pages.data-pelanggan.modals.' . $cls . '.pages.catatantambahan')
                 @include('Admin.Pages.data-pelanggan.modals.' . $cls . '.pages.timeline')
 
-                @if (auth()->user()->utype == $pelanggan->approval->current_staging_area)
+                @if (auth()->user()->utype === $pelanggan->approval->current_staging_area)
                     @switch(auth()->user()->utype)
                         @case('AuthCRO')
                             @if ($pelanggan->reference_id)

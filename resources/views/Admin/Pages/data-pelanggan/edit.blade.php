@@ -516,7 +516,7 @@
                                                                 <input type="text" class="form-control"
                                                                     placeholder="Masukkan kode promo..." id="package_promo"
                                                                     name="data[{{ $packageIDX - 1 }}][package_promo]"
-                                                                    value="{{ old('data[' . $packageIDX - 1 . '][package_promo]', json_decode($dataPelanggan->service->service_package)[$key]->package_promo) }}">
+                                                                    value="{{ old('data[' . $packageIDX - 1 . '][package_promo]', isset(json_decode($dataPelanggan->service->service_package)[$key]->package_promo) ? json_decode($dataPelanggan->service->service_package)[$key]->package_promo : null) }}">
                                                                 <button class="btn btn-outline-success" type="button"
                                                                     id="btnSubmitPromo">Ambil Promo</button>
                                                             </div>
@@ -564,7 +564,7 @@
                                                                 <input type="text" class="form-control-plaintext"
                                                                     placeholder="Masukkan kode promo..." id="package_promo"
                                                                     name="data[{{ $packageIDX - 1 }}][package_promo]"
-                                                                    value="{{ old('data[' . $packageIDX - 1 . '][package_promo]', json_decode($dataPelanggan->service->service_package)[$key]->package_promo) }}">
+                                                                    value="{{ old('data[' . $packageIDX - 1 . '][package_promo]', isset(json_decode($dataPelanggan->service->service_package)[$key]->package_promo) ? json_decode($dataPelanggan->service->service_package)[$key]->package_promo : null) }}">
                                                                 <button class="btn btn-outline-success" type="button"
                                                                     id="btnSubmitPromo" disabled>Ambil Promo</button>
                                                             </div>

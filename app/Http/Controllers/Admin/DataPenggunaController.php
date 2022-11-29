@@ -74,7 +74,8 @@ class DataPenggunaController extends Controller
                 'password' => 'required|confirmed|min:8',
                 'employee_id' => 'required|unique:users,employee_id',
                 'name' => 'required',
-                'utype' => 'required'
+                'utype' => 'required',
+                'branch_id' => 'required'
             ],
             [
                 'email.required' => 'Field Email Wajib Diisi',
@@ -86,7 +87,8 @@ class DataPenggunaController extends Controller
                 'employee_id.required' => 'Field ID Karyawan Wajib Diisi',
                 'employee_id.unique' => 'ID Karyawan sudah terdaftar',
                 'name.required' => 'Field Nama Karyawan Wajib Diisi',
-                'utype.required' => 'Field Aturan Pengguna Wajib Diisi'
+                'utype.required' => 'Field Aturan Pengguna Wajib Diisi',
+                'branch_id.required' => 'Field Regional Wajib Diisi'
             ]
         );
 
@@ -117,6 +119,7 @@ class DataPenggunaController extends Controller
                 $newUser->name = $validateRequest['name'];
                 $newUser->under_employee_id = $request->get('under_employee_id');
                 $newUser->utype = $validateRequest['utype'];
+                $newUser->branch_id = $validateRequest['branch_id'];
                 $newUser->isApprovedByAdmin = true;
                 $newUser->save();
 
@@ -133,6 +136,7 @@ class DataPenggunaController extends Controller
                 $newUser->name = $validateRequest['name'];
                 $newUser->under_employee_id = null;
                 $newUser->utype = $validateRequest['utype'];
+                $newUser->branch_id = $validateRequest['branch_id'];
                 $newUser->isApprovedByAdmin = true;
                 $newUser->save();
 
@@ -187,22 +191,20 @@ class DataPenggunaController extends Controller
         $validateRequest = $request->validate(
             [
                 'email' => 'required|email|unique:users,email,' . $data_pengguna,
-                // 'password' => 'required|confirmed|min:8',
                 'employee_id' => 'required|unique:users,employee_id,' . $data_pengguna,
                 'name' => 'required',
-                'utype' => 'required'
+                'utype' => 'required',
+                'branch_id' => 'required'
             ],
             [
                 'email.required' => 'Field Email Wajib Diisi',
                 'email.email' => 'Email tidak valid',
                 'email.unique' => 'Email sudah terdaftar',
-                // 'password.required' => 'Field Password Wajib Diisi',
-                // 'password.confirmed' => 'Password tidak sama',
-                // 'password.min' => 'Password harus berjumlah min. 8 karakter',
                 'employee_id.required' => 'Field ID Karyawan Wajib Diisi',
                 'employee_id.unique' => 'ID Karyawan sudah terdaftar',
                 'name.required' => 'Field Nama Karyawan Wajib Diisi',
-                'utype.required' => 'Field Aturan Pengguna Wajib Diisi'
+                'utype.required' => 'Field Aturan Pengguna Wajib Diisi',
+                'branch_id.required' => 'Field Regional Wajib Diisi'
             ]
         );
 
@@ -233,6 +235,7 @@ class DataPenggunaController extends Controller
                 $updateUser->name = $validateRequest['name'];
                 $updateUser->under_employee_id = $request->get('under_employee_id');
                 $updateUser->utype = $validateRequest['utype'];
+                $updateUser->branch_id = $validateRequest['branch_id'];
                 $updateUser->isApprovedByAdmin = true;
                 $updateUser->save();
 
@@ -249,6 +252,7 @@ class DataPenggunaController extends Controller
                 $updateUser->name = $validateRequest['name'];
                 $updateUser->under_employee_id = null;
                 $updateUser->utype = $validateRequest['utype'];
+                $updateUser->branch_id = $validateRequest['branch_id'];
                 $updateUser->isApprovedByAdmin = true;
                 $updateUser->save();
 

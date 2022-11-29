@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\PromoList;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -26,7 +27,7 @@ class DataPelangganController extends Controller
         ];
 
         $uType = auth()->user()->utype;
-        $fetchDataPelanggan = Customer::all();
+        $fetchDataPelanggan = Customer::where('branch_id', auth()->user()->branch_id)->get();
 
         // Cek Customer IS atau Bukan
         foreach ($fetchDataPelanggan as $key => $value) {
@@ -266,6 +267,7 @@ class DataPelangganController extends Controller
             }
 
             $customerFind->reference_id = $validateRequest['reference_id'];
+            $customerFind->approval->current_staging_area = "AuthSales";
             $customerFind->push();
             return redirect()->to('data-pelanggan')->with('successMessage', 'Berhasil update data pelanggan.');
         }
@@ -604,6 +606,37 @@ class DataPelangganController extends Controller
                 $dataCustomer->approval->current_staging_area = "AuthCRO";
                 $dataCustomer->approval->next_staging_area =    "AuthCRO";
                 $dataCustomer->approval->array_approval = json_encode($oldDataJSON);
+
+                // Send Email to Customer
+                $to_email = $dataCustomer->email;
+                $to_emailSales = "";
+                if ($dataCustomer->reference_id != null) {
+                    $response = Http::withHeaders([
+                        'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
+                    ])->get('https://legacy.is5.nusa.net.id/employees/' . $dataCustomer->reference_id);
+
+                    if ($response->successful()) {
+                        $decodeResponse = json_decode($response->body());
+
+                        $to_emailSales = $decodeResponse->email;
+                    }
+                }
+
+                $customerFindByID = Customer::find($id_pelanggan);
+                $data = [
+                    'customer' => $customerFindByID
+                ];
+
+                $textingEmail = "Data Formulir Digital Registrasi Anda Telah Disetujui";
+                Mail::raw($textingEmail, function ($message) use ($to_email, $to_emailSales, $dataCustomer, $data) {
+                    $message->to($to_email)->subject('Persetujuan Formulir Registrasi Internet');
+                    if ($to_emailSales != "") {
+                        $message->to($to_emailSales)->subject('Persetujuan Formulir Registrasi Internet');
+                    }
+                    $message->from('reg@nusa.net.id', 'Nusanet Medan');
+                    $pdf = Pdf::loadView('report', $data);
+                    $message->attachData($pdf->output(),  $dataCustomer->customer_id . '-form.pdf');
+                });
                 break;
             default:
                 # code...
@@ -713,7 +746,13 @@ class DataPelangganController extends Controller
 
     public function downloadPDFCustomer($id_pelanggan)
     {
-        dd($id_pelanggan);
+        $customerFindByID = Customer::find($id_pelanggan);
+        $data = [
+            'customer' => $customerFindByID
+        ];
+
+        $pdf = Pdf::loadView('report', $data);
+        return $pdf->stream();
     }
 
     public function getAmount($money)

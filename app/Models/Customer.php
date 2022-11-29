@@ -12,6 +12,7 @@ class Customer extends Model
 
     protected $keyType = 'string';
     protected $fillable = [
+        'branch_id',
         'customer_id',
         'name',
         'address',
