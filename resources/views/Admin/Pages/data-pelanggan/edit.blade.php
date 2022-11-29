@@ -515,7 +515,8 @@
                                                             <div class="input-group mb-3">
                                                                 <input type="text" class="form-control"
                                                                     placeholder="Masukkan kode promo..." id="package_promo"
-                                                                    name="data[{{ $packageIDX - 1 }}][package_promo]">
+                                                                    name="data[{{ $packageIDX - 1 }}][package_promo]"
+                                                                    value="{{ old('data[' . $packageIDX - 1 . '][package_promo]', json_decode($dataPelanggan->service->service_package)[$key]->package_promo) }}">
                                                                 <button class="btn btn-outline-success" type="button"
                                                                     id="btnSubmitPromo">Ambil Promo</button>
                                                             </div>
@@ -556,15 +557,16 @@
                                                             value="{{ old('package_top', json_decode($dataPelanggan->service->service_package)[$key]->termofpaymentDeals) }}">
                                                     </div>
                                                     <div class="mb-3 row">
-                                                        <label for="package_top" class="col-sm-6 col-form-label">Promo
+                                                        <label for="package_promo" class="col-sm-6 col-form-label">Promo
                                                             Paket</label>
                                                         <div class="col-sm-6">
                                                             <div class="input-group mb-3">
-                                                                <input type="text" class="form-control"
+                                                                <input type="text" class="form-control-plaintext"
                                                                     placeholder="Masukkan kode promo..." id="package_promo"
-                                                                    name="data[{{ $packageIDX - 1 }}][package_promo]">
+                                                                    name="data[{{ $packageIDX - 1 }}][package_promo]"
+                                                                    value="{{ old('data[' . $packageIDX - 1 . '][package_promo]', json_decode($dataPelanggan->service->service_package)[$key]->package_promo) }}">
                                                                 <button class="btn btn-outline-success" type="button"
-                                                                    id="btnSubmitPromo">Ambil Promo</button>
+                                                                    id="btnSubmitPromo" disabled>Ambil Promo</button>
                                                             </div>
                                                         </div>
                                                     </div>

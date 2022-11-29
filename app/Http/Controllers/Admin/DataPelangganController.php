@@ -335,6 +335,14 @@ class DataPelangganController extends Controller
             $customerFind->technical->technical_name = $validateRequest['technical_name'];
             $customerFind->technical->technical_contact = $validateRequest['technical_contact'];
             $customerFind->technical->technical_email = $validateRequest['technical_email'];
+
+            $dataServicePelanggan = $request->get('data');
+            foreach ($dataServicePelanggan as $a => $b) {
+                $dataServicePelanggan[$a]['service_price'] = $this->getAmount($b['service_price']);
+            }
+            $customerFind->service->service_package = json_encode($dataServicePelanggan);
+
+
             $customerFind->survey_id = $validateRequest['survey_id'];
             $customerFind->extend_note = $validateRequest['extend_note'];
 
@@ -411,6 +419,13 @@ class DataPelangganController extends Controller
             $customerFind->technical->technical_name = $validateRequest['technical_name'];
             $customerFind->technical->technical_contact = $validateRequest['technical_contact'];
             $customerFind->technical->technical_email = $validateRequest['technical_email'];
+
+            $dataServicePelanggan = $request->get('data');
+            foreach ($dataServicePelanggan as $a => $b) {
+                $dataServicePelanggan[$a]['service_price'] = $this->getAmount($b['service_price']);
+            }
+            $customerFind->service->service_package = json_encode($dataServicePelanggan);
+
             $customerFind->survey_id = $validateRequest['survey_id'];
             $customerFind->extend_note = $validateRequest['extend_note'];
 
@@ -699,5 +714,18 @@ class DataPelangganController extends Controller
     public function downloadPDFCustomer($id_pelanggan)
     {
         dd($id_pelanggan);
+    }
+
+    public function getAmount($money)
+    {
+        $cleanString = preg_replace('/([^0-9\.,])/i', '', $money);
+        $onlyNumbersString = preg_replace('/([^0-9])/i', '', $money);
+
+        $separatorsCountToBeErased = strlen($cleanString) - strlen($onlyNumbersString) - 1;
+
+        $stringWithCommaOrDot = preg_replace('/([,\.])/', '', $cleanString, $separatorsCountToBeErased);
+        $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '',  $stringWithCommaOrDot);
+
+        return (float) str_replace(',', '.', $removedThousandSeparator);
     }
 }
