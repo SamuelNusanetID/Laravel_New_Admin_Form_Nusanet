@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class DataLayananController extends Controller
 {
+    public function __construct()
+    {
+        $this->branch_id = auth()->user()->branch_id;
+    }
     /**
      * Display a listing of the resource.
      *

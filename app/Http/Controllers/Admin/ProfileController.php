@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\URL;
 
 class ProfileController extends Controller
 {
+    public function __construct()
+    {
+        $this->branch_id = auth()->user()->branch_id;
+    }
+
     public function index()
     {
         $datas = [
