@@ -85,7 +85,7 @@ class DataPelangganController extends Controller
                 $datas['dataPelanggan'] = $this->indexAuthCRO($fetchDataPelanggan);
                 break;
             case 'AuthSalesManager':
-                $datas['dataPelanggan'] = $this->indexAuthSalesManager($fetchDataPelanggan);
+                $datas['dataPelanggan'] = $this->indexAuthSalesManager($fetchDataPelanggan, $fetchDataPelanggan);
                 break;
             case 'AuthSales':
                 $datas['dataPelanggan'] = $this->indexAuthSales($fetchDataPelanggan);
@@ -108,20 +108,38 @@ class DataPelangganController extends Controller
         return $dataPelangganCollection;
     }
 
-    public function indexAuthSalesManager($dataPelangganCollection)
+    public function indexAuthSalesManager($dataPelangganCollection, $filteredDataPelanggan)
     {
-        $userIDKaryawan = auth()->user()->employee_id;
-        $teamGetArray = User::where('under_employee_id', $userIDKaryawan)->get();
+        $isAssignedSM = false;
 
-        foreach ($dataPelangganCollection as $a => $b) {
-            foreach ($teamGetArray as $c => $d) {
-                if ($b->reference_id !== $d->employee_id) {
-                    unset($dataPelangganCollection[$a]);
+        foreach ($filteredDataPelanggan as $key => $value) {
+            if ($value->assigned_sales_manager != null) {
+                $userIDKaryawan = auth()->user()->employee_id;
+                if ($value->assigned_sales_manager !== $userIDKaryawan) {
+                    unset($filteredDataPelanggan[$key]);
+                    $isAssignedSM = true;
+                }
+            } else {
+                unset($filteredDataPelanggan[$key]);
+                $isAssignedSM = false;
+            }
+        }
+
+        if (!$isAssignedSM) {
+            $filteredDataPelanggan = $dataPelangganCollection;
+            $userIDKaryawan = auth()->user()->employee_id;
+            $teamGetArray = User::where('under_employee_id', $userIDKaryawan)->get();
+
+            foreach ($filteredDataPelanggan as $a => $b) {
+                foreach ($teamGetArray as $c => $d) {
+                    if ($b->reference_id !== $d->employee_id) {
+                        unset($filteredDataPelanggan[$a]);
+                    }
                 }
             }
         }
 
-        return $dataPelangganCollection;
+        return $filteredDataPelanggan;
     }
 
     public function indexAuthSales($dataPelangganCollection)
