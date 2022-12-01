@@ -672,6 +672,7 @@ class DataPelangganController extends Controller
 
         // Save to Revision
         $newRevLog = new RevLog();
+        $newRevLog->id = $id_pelanggan;
         $newRevLog->status_message = "Disetujui";
         $newRevLog->revision_message = $request->get('message_body_notification');
         $newRevLog->pic = auth()->user()->name;
@@ -775,6 +776,7 @@ class DataPelangganController extends Controller
 
         // Save to Revision
         $newRevLog = new RevLog();
+        $newRevLog->id = $id_pelanggan;
         $newRevLog->status_message = "Ditolak";
         $newRevLog->revision_message = $request->get('message_body_notification');
         $newRevLog->pic = auth()->user()->name;
