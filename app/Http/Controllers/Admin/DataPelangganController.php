@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\PromoList;
+use App\Models\RevLog;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -556,6 +557,7 @@ class DataPelangganController extends Controller
                 $dataCustomer->approval->current_staging_area = "AuthSalesManager";
                 $dataCustomer->approval->next_staging_area = "AuthCRO";
                 $dataCustomer->approval->array_approval = json_encode($oldDataJSON);
+
                 break;
             case 'AuthSalesManager':
                 $resJSON = [];
@@ -668,6 +670,13 @@ class DataPelangganController extends Controller
 
         $dataCustomer->push();
 
+        // Save to Revision
+        $newRevLog = new RevLog();
+        $newRevLog->status_message = "Disetujui";
+        $newRevLog->revision_message = $request->get('message_body_notification');
+        $newRevLog->pic = auth()->user()->name;
+        $newRevLog->save();
+
         return back()->with('successMessage', 'Berhasil mengupdate timeline.');
     }
 
@@ -763,6 +772,13 @@ class DataPelangganController extends Controller
         }
 
         $dataCustomer->push();
+
+        // Save to Revision
+        $newRevLog = new RevLog();
+        $newRevLog->status_message = "Ditolak";
+        $newRevLog->revision_message = $request->get('message_body_notification');
+        $newRevLog->pic = auth()->user()->name;
+        $newRevLog->save();
 
         return back()->with('successMessage', 'Berhasil mengupdate timeline.');
     }
