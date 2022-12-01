@@ -5,14 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 
 class ProfileController extends Controller
 {
+    protected $branch_id;
     public function __construct()
     {
-        $this->branch_id = auth()->user()->branch_id;
+        $this->middleware(function ($request, $next) {
+            $this->branch_id = Auth::user()->branch_id;
+            return $next($request);
+        });
     }
 
     public function index()

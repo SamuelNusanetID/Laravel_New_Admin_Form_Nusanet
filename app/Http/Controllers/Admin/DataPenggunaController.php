@@ -5,13 +5,18 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class DataPenggunaController extends Controller
 {
+    protected $branch_id;
     public function __construct()
     {
-        $this->branch_id = auth()->user()->branch_id;
+        $this->middleware(function ($request, $next) {
+            $this->branch_id = Auth::user()->branch_id;
+            return $next($request);
+        });
     }
     /**
      * Display a listing of the resource.
@@ -25,12 +30,10 @@ class DataPenggunaController extends Controller
         ];
 
         try {
-            $fetchDataPengguna = User::all();
+            $fetchDataPengguna = User::where('branch_id', $this->branch_id)->get();
         } catch (\Throwable $th) {
             $fetchDataPengguna = [];
         }
-
-
 
         foreach ($fetchDataPengguna as $key => $value) {
             try {
@@ -125,6 +128,7 @@ class DataPenggunaController extends Controller
                 $newUser->utype = $validateRequest['utype'];
                 $newUser->branch_id = $validateRequest['branch_id'];
                 $newUser->isApprovedByAdmin = true;
+                $newUser->branch_id = $this->branch_id;
                 $newUser->save();
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil ditambahkan.');
@@ -142,6 +146,7 @@ class DataPenggunaController extends Controller
                 $newUser->utype = $validateRequest['utype'];
                 $newUser->branch_id = $validateRequest['branch_id'];
                 $newUser->isApprovedByAdmin = true;
+                $newUser->branch_id = $this->branch_id;
                 $newUser->save();
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil ditambahkan.');
@@ -234,13 +239,13 @@ class DataPenggunaController extends Controller
             try {
                 $updateUser = $user->find($data_pengguna);
                 $updateUser->email = $validateRequest['email'];
-                // $updateUser->password = $validateRequest['password'];
                 $updateUser->employee_id = $validateRequest['employee_id'];
                 $updateUser->name = $validateRequest['name'];
                 $updateUser->under_employee_id = $request->get('under_employee_id');
                 $updateUser->utype = $validateRequest['utype'];
                 $updateUser->branch_id = $validateRequest['branch_id'];
                 $updateUser->isApprovedByAdmin = true;
+                $updateUser->branch_id = $this->branch_id;
                 $updateUser->save();
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil diubah.');
@@ -251,13 +256,13 @@ class DataPenggunaController extends Controller
             try {
                 $updateUser = $user->find($data_pengguna);
                 $updateUser->email = $validateRequest['email'];
-                // $updateUser->password = $validateRequest['password'];
                 $updateUser->employee_id = $validateRequest['employee_id'];
                 $updateUser->name = $validateRequest['name'];
                 $updateUser->under_employee_id = null;
                 $updateUser->utype = $validateRequest['utype'];
                 $updateUser->branch_id = $validateRequest['branch_id'];
                 $updateUser->isApprovedByAdmin = true;
+                $updateUser->branch_id = $this->branch_id;
                 $updateUser->save();
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil diubah.');

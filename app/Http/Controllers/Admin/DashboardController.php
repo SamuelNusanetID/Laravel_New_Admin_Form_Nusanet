@@ -7,12 +7,17 @@ use App\Models\Customer;
 use App\Models\PromoList;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    protected $branch_id;
     public function __construct()
     {
-        $this->branch_id = auth()->user()->branch_id;
+        $this->middleware(function ($request, $next) {
+            $this->branch_id = Auth::user()->branch_id;
+            return $next($request);
+        });
     }
 
     public function index()

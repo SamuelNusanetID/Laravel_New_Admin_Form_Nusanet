@@ -5,12 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ServicesList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DataLayananController extends Controller
 {
+    protected $branch_id;
     public function __construct()
     {
-        $this->branch_id = auth()->user()->branch_id;
+        $this->middleware(function ($request, $next) {
+            $this->branch_id = Auth::user()->branch_id;
+            return $next($request);
+        });
     }
     /**
      * Display a listing of the resource.
@@ -24,7 +29,7 @@ class DataLayananController extends Controller
         ];
 
         try {
-            $datas['dataLayanan'] = ServicesList::all();
+            $datas['dataLayanan'] = ServicesList::where('branch_id', $this->branch_id)->get();
         } catch (\Throwable $th) {
             $datas['dataLayanan'] = [];
         }
@@ -81,6 +86,7 @@ class DataLayananController extends Controller
             $newDataLayanan->retail_package_price = $request->get('retail_package_price');
             $newDataLayanan->government_package_price = $request->get('government_package_price');
             $newDataLayanan->noted_service = $request->get('noted_service');
+            $newDataLayanan->branch_id = $this->branch_id;
             $newDataLayanan->save();
 
             return redirect()->to('data-layanan')->with('successMessage', 'Data layanan berhasil ditambahkan.');
@@ -157,6 +163,7 @@ class DataLayananController extends Controller
             $updateDataLayanan->retail_package_price = $request->get('retail_package_price');
             $updateDataLayanan->government_package_price = $request->get('government_package_price');
             $updateDataLayanan->noted_service = $request->get('noted_service');
+            $updateDataLayanan->branch_id = $this->branch_id;
             $updateDataLayanan->save();
 
             return redirect()->to('data-layanan')->with('successMessage', 'Data layanan berhasil diubah.');

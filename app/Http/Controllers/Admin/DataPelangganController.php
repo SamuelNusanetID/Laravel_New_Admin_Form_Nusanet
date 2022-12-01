@@ -9,22 +9,22 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 class DataPelangganController extends Controller
 {
-
+    protected $branch_id;
     public function __construct()
     {
-        $this->branch_id = auth()->user()->branch_id;
+        $this->middleware(function ($request, $next) {
+            $this->branch_id = Auth::user()->branch_id;
+            return $next($request);
+        });
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $datas = [
@@ -32,7 +32,7 @@ class DataPelangganController extends Controller
         ];
 
         $uType = auth()->user()->utype;
-        $fetchDataPelanggan = Customer::where('branch_id', auth()->user()->branch_id)->get();
+        $fetchDataPelanggan = Customer::where('branch_id', $this->branch_id)->get();
 
         // Cek Customer IS atau Bukan
         foreach ($fetchDataPelanggan as $key => $value) {

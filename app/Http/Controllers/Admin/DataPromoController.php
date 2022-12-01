@@ -6,12 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\PromoList;
 use App\Models\ServicesList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DataPromoController extends Controller
 {
+    protected $branch_id;
     public function __construct()
     {
-        $this->branch_id = auth()->user()->branch_id;
+        $this->middleware(function ($request, $next) {
+            $this->branch_id = Auth::user()->branch_id;
+            return $next($request);
+        });
     }
     /**
      * Display a listing of the resource.
@@ -25,7 +30,7 @@ class DataPromoController extends Controller
         ];
 
         try {
-            $datas['dataPromo'] = PromoList::all();
+            $datas['dataPromo'] = PromoList::where('branch_id', $this->branch_id)->get();
         } catch (\Throwable $th) {
             $datas['dataPromo'] = [];
         }
@@ -45,7 +50,7 @@ class DataPromoController extends Controller
         ];
 
         try {
-            $datas['packageList'] = ServicesList::all();
+            $datas['packageList'] = ServicesList::where('branch_id', $this->branch_id)->get();
             $arrayDataList = array_count_values(
                 array_column($datas['packageList']->toArray(), 'package_name')
             );
@@ -97,6 +102,7 @@ class DataPromoController extends Controller
             $newPromo->monthly_cut_status = $request->get('monthly_cut_status');
             $newPromo->activate_date = $validateRequest['activate_date'];
             $newPromo->expired_date = $validateRequest['expired_date'];
+            $newPromo->branch_id = $this->branch_id;
             $newPromo->save();
 
             return redirect()->to('data-promo')->with('successMessage', 'Data promo berhasil ditambahkan.');
@@ -129,7 +135,7 @@ class DataPromoController extends Controller
         ];
 
         try {
-            $datas['packageList'] = ServicesList::all();
+            $datas['packageList'] = ServicesList::where('branch_id', $this->branch_id)->get();
             $arrayDataList = array_count_values(
                 array_column($datas['packageList']->toArray(), 'package_name')
             );
@@ -188,6 +194,7 @@ class DataPromoController extends Controller
             $updatePromo->monthly_cut_status = $request->get('monthly_cut_status');
             $updatePromo->activate_date = $validateRequest['activate_date'];
             $updatePromo->expired_date = $validateRequest['expired_date'];
+            $updatePromo->branch_id = $this->branch_id;
             $updatePromo->save();
 
             return redirect()->to('data-promo')->with('successMessage', 'Data promo berhasil diubah.');
