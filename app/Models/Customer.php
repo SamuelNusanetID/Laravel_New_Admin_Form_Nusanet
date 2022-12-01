@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class Customer extends Model
 {
@@ -56,5 +58,16 @@ class Customer extends Model
     public function approval()
     {
         return $this->hasOne(Approval::class, 'id', 'id');
+    }
+
+    public function scopeFiltered(Builder $builder): Builder
+    {
+        return $builder
+            ->leftJoin('users', "{$this->table}.reference_id", 'users.employee_id')
+            ->select(
+                "{$this->table}.*",
+                DB::raw("IF({$this->table}.assigned_sales_manager IS NULL, users.under_employee_id, {$this->table}.assigned_sales_manager) AS reference_sm")
+            )
+            ->havingRaw('reference_sm IS NOT NULL');
     }
 }
