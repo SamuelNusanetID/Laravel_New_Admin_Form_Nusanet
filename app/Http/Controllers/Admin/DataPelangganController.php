@@ -790,4 +790,52 @@ class DataPelangganController extends Controller
 
         return (float) str_replace(',', '.', $removedThousandSeparator);
     }
+
+    public function AssignToView(Customer $customer, $data_pelanggan)
+    {
+        $customerFind = $customer->find($data_pelanggan);
+        $datas = [
+            'titlePage' => 'Assign To PIC',
+            'dataPelanggan' => $customerFind,
+            'dataSalesManager' => User::where([
+                'branch_id' => $this->branch_id,
+                'utype' => 'AuthSalesManager'
+            ])->get(),
+        ];
+
+        return view('Admin.Pages.data-pelanggan.assignto', $datas);
+    }
+
+    public function AssignToFunction(Request $request, Customer $customer, $data_pelanggan)
+    {
+        $customerFind = $customer->find($data_pelanggan);
+
+        $validateRequest = $request->validate(
+            [
+                'assigned_sales_manager' => 'required'
+            ],
+            [
+                'assigned_sales_manager.required' => 'Field Assign To Wajib Diisi'
+            ]
+        );
+
+        try {
+            $response = Http::withHeaders([
+                'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
+            ])->get('https://legacy.is5.nusa.net.id/employees/' . $request->get('assigned_sales_manager'));
+            $resultJSON = json_decode($response->body());
+
+            Mail::raw('Data pelanggan telah diassign ke Sales Manager ' . $resultJSON->name . ' oleh ' . auth()->user()->name, function ($message) use ($resultJSON) {
+                $message->to($resultJSON->email)
+                    ->subject("Informasi Assignment Data");
+            });
+
+            $customerFind->assigned_sales_manager = $request->get('assigned_sales_manager');
+            $customerFind->push();
+
+            return redirect()->to('data-pelanggan')->with('successMessage', 'Berhasil assign to SM data pelanggan.');
+        } catch (\Throwable $th) {
+            return back()->with('errorMessage', json_encode($th->getMessage()));
+        }
+    }
 }

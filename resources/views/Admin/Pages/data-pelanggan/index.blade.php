@@ -238,6 +238,10 @@
                                                                                     class="btn btn-info">
                                                                                     <i class="fas fa-download"></i>
                                                                                 </a>
+                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/assign-pic') }}"
+                                                                                    class="btn btn-secondary">
+                                                                                    <i class="fas fa-mail-bulk"></i>
+                                                                                </a>
                                                                             @endcan
                                                                         </div>
                                                                     </td>
@@ -416,7 +420,11 @@
                                                                                 @endif
                                                                                 <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/download') }}"
                                                                                     class="btn btn-info">
-                                                                                    <i class="fas fa-download"></i>
+                                                                                    <i class="fas fa-download "></i>
+                                                                                </a>
+                                                                                <a href="{{ URL::to('data-pelanggan/' . $pelanggan->id . '/assign-pic') }}"
+                                                                                    class="btn btn-secondary">
+                                                                                    <i class="fas fa-mail-bulk"></i>
                                                                                 </a>
                                                                             @endcan
                                                                         </div>
@@ -472,13 +480,13 @@
             if (isSuccessMessage) {
                 Swal.fire(
                     'Berhasil!',
-                    'Data pelanggan telah berhasil diajukan',
+                    {!! json_encode(session('successMessage')) !!},
                     'success'
                 )
             } else if (isErrorMessage) {
                 Swal.fire(
                     'Gagal!',
-                    'Data pelanggan gagal diajukan',
+                    {!! json_encode(session('errorMessage')) !!},
                     'error'
                 )
             }

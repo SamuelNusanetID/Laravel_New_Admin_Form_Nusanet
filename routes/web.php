@@ -29,6 +29,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('data-pelanggan/{id_pelanggan}/approved', [DataPelangganController::class, 'approvalMessage']);
     Route::post('data-pelanggan/{id_pelanggan}/rejected', [DataPelangganController::class, 'rejectedMessage']);
     Route::get('data-pelanggan/{id_pelanggan}/download', [DataPelangganController::class, 'downloadPDFCustomer']);
+    Route::get('data-pelanggan/{id_pelanggan}/assign-pic', [DataPelangganController::class, 'AssignToView']);
+    Route::post('data-pelanggan/{id_pelanggan}/assign-pic', [DataPelangganController::class, 'AssignToFunction']);
     Route::resource('data-layanan', DataLayananController::class)->middleware('level:AuthMaster,AuthCRO,AuthSalesManager,AuthSales');
     Route::resource('data-promo', DataPromoController::class)->middleware('level:AuthMaster,AuthCRO,AuthSalesManager,AuthSales');
     Route::resource('data-pengguna', DataPenggunaController::class)->middleware('level:AuthMaster');
