@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 
 class DataPenggunaController extends Controller
@@ -121,7 +122,7 @@ class DataPenggunaController extends Controller
             try {
                 $newUser = new User();
                 $newUser->email = $validateRequest['email'];
-                $newUser->password = $validateRequest['password'];
+                $newUser->password = Hash::make($validateRequest['password']);
                 $newUser->employee_id = $validateRequest['employee_id'];
                 $newUser->name = $validateRequest['name'];
                 $newUser->under_employee_id = $request->get('under_employee_id');
