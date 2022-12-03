@@ -140,7 +140,7 @@ class DataPenggunaController extends Controller
             try {
                 $newUser = new User();
                 $newUser->email = $validateRequest['email'];
-                $newUser->password = $validateRequest['password'];
+                $newUser->password = Hash::make($validateRequest['password']);
                 $newUser->employee_id = $validateRequest['employee_id'];
                 $newUser->name = $validateRequest['name'];
                 $newUser->under_employee_id = null;
