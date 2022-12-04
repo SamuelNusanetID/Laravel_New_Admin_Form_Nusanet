@@ -9,13 +9,16 @@ class PromoList extends Model
 {
     protected $table = 'promo_list';
     protected $fillable = [
-        'branch_id',
         'promo_code',
+        'promo_name',
+        'branch_id',
         'package_name',
         'package_top',
         'discount_cut',
         'monthly_cut',
         'monthly_cut_status',
+        'promo_desc',
+        'promo_status',
         'activate_date',
         'expired_date'
     ];

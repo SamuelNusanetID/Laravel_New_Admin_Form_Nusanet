@@ -68,7 +68,7 @@
                                         @foreach ($dataPromo as $item)
                                             <tr>
                                                 <td class="align-middle text-center">{{ $i }}</td>
-                                                <td class="align-middle text-center fw-bold">{{ $item->promo_code }}</td>
+                                                <td class="align-middle text-center fw-bold">{{ $item->promo_name }}</td>
                                                 <td class="align-middle">{{ $item->package_name }}</td>
                                                 <td class="align-middle text-center">{{ $item->package_top }}</td>
                                                 <td class="align-middle text-center">{{ $item->discount_cut }}</td>
