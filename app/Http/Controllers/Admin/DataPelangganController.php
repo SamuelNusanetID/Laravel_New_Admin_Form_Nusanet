@@ -33,7 +33,13 @@ class DataPelangganController extends Controller
         ];
 
         $uType = auth()->user()->utype;
-        $fetchDataPelanggan = Customer::filtered()->where('customers.branch_id', $this->branch_id)->get();
+
+        if ($uType != "AuthMaster") {
+            $fetchDataPelanggan = Customer::filtered()->where('customers.branch_id', $this->branch_id)->get();
+        } else {
+            $fetchDataPelanggan = Customer::filtered()->get();
+        }
+
 
         // Cek Customer IS atau Bukan
         foreach ($fetchDataPelanggan as $key => $value) {

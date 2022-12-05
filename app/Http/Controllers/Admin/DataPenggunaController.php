@@ -31,7 +31,11 @@ class DataPenggunaController extends Controller
         ];
 
         try {
-            $fetchDataPengguna = User::where('branch_id', $this->branch_id)->get();
+            if (auth()->user()->utype != "AuthMaster") {
+                $fetchDataPengguna = User::where('branch_id', $this->branch_id)->get();
+            } else {
+                $fetchDataPengguna = User::all();
+            }
         } catch (\Throwable $th) {
             $fetchDataPengguna = [];
         }
@@ -129,7 +133,6 @@ class DataPenggunaController extends Controller
                 $newUser->utype = $validateRequest['utype'];
                 $newUser->branch_id = $validateRequest['branch_id'];
                 $newUser->isApprovedByAdmin = true;
-                $newUser->branch_id = $this->branch_id;
                 $newUser->save();
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil ditambahkan.');
@@ -147,7 +150,6 @@ class DataPenggunaController extends Controller
                 $newUser->utype = $validateRequest['utype'];
                 $newUser->branch_id = $validateRequest['branch_id'];
                 $newUser->isApprovedByAdmin = true;
-                $newUser->branch_id = $this->branch_id;
                 $newUser->save();
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil ditambahkan.');
@@ -246,7 +248,6 @@ class DataPenggunaController extends Controller
                 $updateUser->utype = $validateRequest['utype'];
                 $updateUser->branch_id = $validateRequest['branch_id'];
                 $updateUser->isApprovedByAdmin = true;
-                $updateUser->branch_id = $this->branch_id;
                 $updateUser->save();
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil diubah.');
@@ -263,7 +264,6 @@ class DataPenggunaController extends Controller
                 $updateUser->utype = $validateRequest['utype'];
                 $updateUser->branch_id = $validateRequest['branch_id'];
                 $updateUser->isApprovedByAdmin = true;
-                $updateUser->branch_id = $this->branch_id;
                 $updateUser->save();
 
                 return redirect()->to('data-pengguna')->with('successMessage', 'Data pengguna berhasil diubah.');

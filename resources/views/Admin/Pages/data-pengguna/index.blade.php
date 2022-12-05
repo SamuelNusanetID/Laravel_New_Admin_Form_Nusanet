@@ -51,6 +51,7 @@
                                             <th class="align-middle text-center">Email Karyawan</th>
                                             <th class="align-middle text-center">Manager</th>
                                             <th class="align-middle text-center">Aturan Pengguna</th>
+                                            <th class="align-middle text-center">Cabang</th>
                                             <th class="align-middle text-center"></th>
                                         </tr>
                                     </thead>
@@ -85,7 +86,20 @@
                                                     @default
                                                         <td class="align-middle text-center">None</td>
                                                 @endswitch
+                                                <td class="align-middle text-center">
+                                                    @switch($item->branch_id)
+                                                        @case('020')
+                                                            Medan Multatuli
+                                                        @break
 
+                                                        @case('062')
+                                                            Bali
+                                                        @break
+
+                                                        @default
+                                                            Medan Multatuli
+                                                    @endswitch
+                                                </td>
                                                 <td class="align-middle text-center">
                                                     <a href="{{ URL::to('data-pengguna/' . $item->id . '/edit') }}"
                                                         class="btn btn-warning text-white">

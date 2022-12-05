@@ -79,11 +79,11 @@
                                                 <td class="align-middle text-center">{{ $item->monthly_cut_status }}</td> --}}
                                                 <td class="align-middle text-center">
                                                     @switch($item->branch_id)
-                                                        @case(020)
+                                                        @case('020')
                                                             Medan Multatuli
                                                         @break
 
-                                                        @case(062)
+                                                        @case('062')
                                                             Bali
                                                         @break
 

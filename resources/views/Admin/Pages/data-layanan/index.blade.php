@@ -56,6 +56,7 @@
                                             <th class="align-middle text-center">Harga Retail Paket</th>
                                             <th class="align-middle text-center">Harga Pemerintah Paket</th>
                                             <th class="align-middle text-center">Catatan</th>
+                                            <th class="align-middle text-center">Cabang</th>
                                             @can('AuthMaster')
                                                 <th class="align-middle text-center"></th>
                                             @endcan
@@ -81,6 +82,20 @@
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     {{ $item->noted_service ? $item->noted_service : '-' }}</td>
+                                                <td class="align-middle text-center">
+                                                    @switch($item->branch_id)
+                                                        @case('020')
+                                                            Medan Multatuli
+                                                        @break
+
+                                                        @case('062')
+                                                            Bali
+                                                        @break
+
+                                                        @default
+                                                            Medan Multatuli
+                                                    @endswitch
+                                                </td>
                                                 @can('AuthMaster')
                                                     <td class="align-middle">
                                                         <a href="{{ URL::to('data-layanan/' . $item->id . '/edit') }}"

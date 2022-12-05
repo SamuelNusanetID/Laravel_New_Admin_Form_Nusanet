@@ -169,6 +169,43 @@
                                             name="noted_service" placeholder="Masukkan catatan paket..."
                                             value="{{ old('noted_service') }}">
                                     </div>
+                                    <div class="mb-3">
+                                        @php
+                                            $branchList = [
+                                                [
+                                                    'branch_code' => '020',
+                                                    'branch_name' => 'Medan Multatuli',
+                                                ],
+                                                [
+                                                    'branch_code' => '062',
+                                                    'branch_name' => 'Bali',
+                                                ],
+                                            ];
+                                        @endphp
+                                        <label for="branch_id" class="form-label">
+                                            Cabang
+                                            <span class="text-danger ms-1">*</span>
+                                        </label>
+                                        <select class="form-select @error('branch_id') is-invalid @enderror"
+                                            name="branch_id" id="branch_id">
+                                            <option disabled selected>Pilih Cabang...</option>
+                                            @foreach ($branchList as $item)
+                                                @if (old('branch_id') == $item['branch_code'])
+                                                    <option value="{{ $item['branch_code'] }}" selected>
+                                                        {{ $item['branch_name'] }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $item['branch_code'] }}">{{ $item['branch_name'] }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('branch_id')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
                                     <div class="text-end" style="width: 100%;">
                                         <button type="reset" class="btn btn-secondary">
                                             <i class="fas fa-ban me-1"></i>

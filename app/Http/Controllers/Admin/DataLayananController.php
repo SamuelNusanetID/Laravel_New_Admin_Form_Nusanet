@@ -29,7 +29,11 @@ class DataLayananController extends Controller
         ];
 
         try {
-            $datas['dataLayanan'] = ServicesList::where('branch_id', $this->branch_id)->get();
+            if (auth()->user()->utype != "AuthMaster") {
+                $datas['dataLayanan'] = ServicesList::where('branch_id', $this->branch_id)->get();
+            } else {
+                $datas['dataLayanan'] = ServicesList::all();
+            }
         } catch (\Throwable $th) {
             $datas['dataLayanan'] = [];
         }
@@ -65,14 +69,16 @@ class DataLayananController extends Controller
                 'package_type' => 'required',
                 'package_categories' => 'required',
                 'package_speed' => 'required',
-                'package_price' => 'required'
+                'package_price' => 'required',
+                'branch_id' => 'required'
             ],
             [
                 'package_name.required' => 'Field Nama Paket Wajib Diisi',
                 'package_type.required' => 'Field Tipe Paket Wajib Diisi',
                 'package_categories.required' => 'Field Kategori Paket Wajib Diisi',
                 'package_speed.required' => 'Field Kecepatan Paket Wajib Diisi',
-                'package_price.required' => 'Field Harga Paket Wajib Diisi'
+                'package_price.required' => 'Field Harga Paket Wajib Diisi',
+                'branch_id.required' => 'Field Cabang Wajib Diisi'
             ]
         );
 
@@ -86,7 +92,7 @@ class DataLayananController extends Controller
             $newDataLayanan->retail_package_price = $request->get('retail_package_price');
             $newDataLayanan->government_package_price = $request->get('government_package_price');
             $newDataLayanan->noted_service = $request->get('noted_service');
-            $newDataLayanan->branch_id = $this->branch_id;
+            $newDataLayanan->branch_id = $validateRequest['branch_id'];
             $newDataLayanan->save();
 
             return redirect()->to('data-layanan')->with('successMessage', 'Data layanan berhasil ditambahkan.');
@@ -142,14 +148,16 @@ class DataLayananController extends Controller
                 'package_type' => 'required',
                 'package_categories' => 'required',
                 'package_speed' => 'required',
-                'package_price' => 'required'
+                'package_price' => 'required',
+                'branch_id' => 'required'
             ],
             [
                 'package_name.required' => 'Field Nama Paket Wajib Diisi',
                 'package_type.required' => 'Field Tipe Paket Wajib Diisi',
                 'package_categories.required' => 'Field Kategori Paket Wajib Diisi',
                 'package_speed.required' => 'Field Kecepatan Paket Wajib Diisi',
-                'package_price.required' => 'Field Harga Paket Wajib Diisi'
+                'package_price.required' => 'Field Harga Paket Wajib Diisi',
+                'branch_id.required' => 'Field Cabang Wajib Diisi'
             ]
         );
 
@@ -163,7 +171,7 @@ class DataLayananController extends Controller
             $updateDataLayanan->retail_package_price = $request->get('retail_package_price');
             $updateDataLayanan->government_package_price = $request->get('government_package_price');
             $updateDataLayanan->noted_service = $request->get('noted_service');
-            $updateDataLayanan->branch_id = $this->branch_id;
+            $updateDataLayanan->branch_id = $validateRequest['branch_id'];
             $updateDataLayanan->save();
 
             return redirect()->to('data-layanan')->with('successMessage', 'Data layanan berhasil diubah.');
