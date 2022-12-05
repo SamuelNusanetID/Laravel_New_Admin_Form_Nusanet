@@ -49,11 +49,13 @@
                                         <tr>
                                             <th class="align-middle text-center">No.</th>
                                             <th class="align-middle text-center">Kode Promo</th>
+                                            <th class="align-middle text-center">Nama Promo</th>
                                             <th class="align-middle text-center">Nama Paket</th>
                                             <th class="align-middle text-center">Jangka Waktu Pembayaran</th>
-                                            <th class="align-middle text-center">Diskon (%)</th>
+                                            {{-- <th class="align-middle text-center">Diskon (%)</th>
                                             <th class="align-middle text-center">Jumlah Bulan (Bulan)</th>
-                                            <th class="align-middle text-center">Kriteria Promo</th>
+                                            <th class="align-middle text-center">Kriteria Promo</th> --}}
+                                            <th class="align-middle text-center">Branch</th>
                                             <th class="align-middle text-center">Tanggal Aktif Promo</th>
                                             <th class="align-middle text-center">Tanggal Berakhir Promo</th>
                                             @can('AuthMaster')
@@ -68,12 +70,27 @@
                                         @foreach ($dataPromo as $item)
                                             <tr>
                                                 <td class="align-middle text-center">{{ $i }}</td>
+                                                <td class="align-middle text-center fw-bold">{{ $item->promo_code }}</td>
                                                 <td class="align-middle text-center fw-bold">{{ $item->promo_name }}</td>
                                                 <td class="align-middle">{{ $item->package_name }}</td>
                                                 <td class="align-middle text-center">{{ $item->package_top }}</td>
-                                                <td class="align-middle text-center">{{ $item->discount_cut }}</td>
+                                                {{-- <td class="align-middle text-center">{{ $item->discount_cut }}</td>
                                                 <td class="align-middle text-center">{{ $item->monthly_cut }}</td>
-                                                <td class="align-middle text-center">{{ $item->monthly_cut_status }}</td>
+                                                <td class="align-middle text-center">{{ $item->monthly_cut_status }}</td> --}}
+                                                <td class="align-middle text-center">
+                                                    @switch($item->branch_id)
+                                                        @case(020)
+                                                            Medan Multatuli
+                                                        @break
+
+                                                        @case(062)
+                                                            Bali
+                                                        @break
+
+                                                        @default
+                                                            Medan Multatuli
+                                                    @endswitch
+                                                </td>
                                                 <td class="align-middle text-center">{{ $item->activate_date }}</td>
                                                 <td class="align-middle text-center">{{ $item->expired_date }}</td>
                                                 @can('AuthMaster')

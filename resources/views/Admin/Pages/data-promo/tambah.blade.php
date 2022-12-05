@@ -35,14 +35,51 @@
                                 <form action="{{ URL::to('data-promo') }}" method="POST">
                                     @csrf
                                     <div class="mb-3">
-                                        <label for="promo_code" class="form-label">
-                                            Kode Promo
+                                        <label for="promo_name" class="form-label">
+                                            Nama Promo
                                             <span class="text-danger ms-1">*</span>
                                         </label>
-                                        <input type="text" class="form-control @error('promo_code') is-invalid @enderror"
-                                            id="promo_code" name="promo_code" placeholder="Masukkan kode promo..."
-                                            value="{{ old('promo_code') }}">
-                                        @error('promo_code')
+                                        <input type="text" class="form-control @error('promo_name') is-invalid @enderror"
+                                            id="promo_name" name="promo_name" placeholder="Masukkan nama promo..."
+                                            value="{{ old('promo_name') }}">
+                                        @error('promo_name')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        @php
+                                            $branchList = [
+                                                [
+                                                    'branch_code' => '020',
+                                                    'branch_name' => 'Medan Multatuli',
+                                                ],
+                                                [
+                                                    'branch_code' => '062',
+                                                    'branch_name' => 'Bali',
+                                                ],
+                                            ];
+                                        @endphp
+                                        <label for="branch_id" class="form-label">
+                                            Cabang
+                                            <span class="text-danger ms-1">*</span>
+                                        </label>
+                                        <select class="form-select @error('branch_id') is-invalid @enderror"
+                                            name="branch_id" id="branch_id">
+                                            <option disabled selected>Pilih Cabang...</option>
+                                            @foreach ($branchList as $item)
+                                                @if (old('branch_id') == $item['branch_code'])
+                                                    <option value="{{ $item['branch_code'] }}" selected>
+                                                        {{ $item['branch_name'] }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $item['branch_code'] }}">{{ $item['branch_name'] }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('branch_id')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -159,6 +196,46 @@
                                             @endforeach
                                         </select>
                                         @error('monthly_cut_status')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="promo_desc" class="form-label">
+                                            Deskripsi Promo
+                                            <span class="text-danger ms-1">*</span>
+                                        </label>
+                                        <textarea class="form-control @error('promo_desc') is-invalid @enderror" id="promo_desc" name="promo_desc"
+                                            rows="5" placeholder="Masukkan Deskripsi Promo...">{{ old('promo_desc') }}</textarea>
+                                        @error('promo_desc')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        @php
+                                            $monthlyStat = ['Aktif', 'Tidak Aktif'];
+                                        @endphp
+                                        <label for="promo_status" class="form-label">
+                                            Status Promo
+                                            <span class="text-danger ms-1">*</span>
+                                        </label>
+                                        <select class="form-select @error('promo_status') is-invalid @enderror"
+                                            name="promo_status" id="promo_status">
+                                            <option disabled selected>Pilih status promo...</option>
+                                            @foreach ($monthlyStat as $item)
+                                                @if (old('promo_status') == $item)
+                                                    <option value="{{ $item }}" selected>
+                                                        {{ $item }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $item }}">{{ $item }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('promo_status')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
