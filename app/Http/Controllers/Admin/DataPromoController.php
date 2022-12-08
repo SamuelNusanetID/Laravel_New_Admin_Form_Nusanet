@@ -53,7 +53,7 @@ class DataPromoController extends Controller
                 try {
                     $response = Http::withHeaders([
                         'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc',
-                    ])->get('https://legacy.is5.nusa.net.id/promo');
+                    ])->get('https://legacy.is5.nusa.net.id/promo?to=' . Date('Y-m-d') . '&active=1');
 
                     $datas['dataPromo'] = json_decode($response->body());
                     foreach ($datas['dataPromo'] as $key => $value) {
