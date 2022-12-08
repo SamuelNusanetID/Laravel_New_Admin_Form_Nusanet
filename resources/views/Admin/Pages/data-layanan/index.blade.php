@@ -38,28 +38,19 @@
                                 </h6>
                             </div>
                             <div class="card-body">
-                                @can('AuthMaster')
-                                    <a href="{{ URL::to('data-layanan/create') }}" class="btn btn-primary mb-3">
-                                        <i class="fas fa-plus-circle me-1"></i>
-                                        Tambah {{ $titlePage }}
-                                    </a>
-                                @endcan
                                 <table class="table table-bordered" id="dataTableDataLayanan">
                                     <thead class="bg-success">
                                         <tr>
-                                            <th class="align-middle text-center">No.</th>
-                                            <th class="align-middle text-center">Nama Paket</th>
-                                            <th class="align-middle text-center">Tipe Paket</th>
-                                            <th class="align-middle text-center">Kategori Paket</th>
-                                            <th class="align-middle text-center">Kecepatan Paket</th>
-                                            <th class="align-middle text-center">Harga Paket</th>
-                                            <th class="align-middle text-center">Harga Retail Paket</th>
-                                            <th class="align-middle text-center">Harga Pemerintah Paket</th>
-                                            <th class="align-middle text-center">Catatan</th>
-                                            <th class="align-middle text-center">Cabang</th>
-                                            @can('AuthMaster')
-                                                <th class="align-middle text-center"></th>
-                                            @endcan
+                                            <th class="align-middle text-center">Id</th>
+                                            <th class="align-middle text-center">Name</th>
+                                            <th class="align-middle text-center">Group</th>
+                                            <th class="align-middle text-center">Download (Kbps)</th>
+                                            <th class="align-middle text-center">Min. Download (Kbps)</th>
+                                            <th class="align-middle text-center">Upload (Kbps)</th>
+                                            <th class="align-middle text-center">Min. Upload (Kbps)</th>
+                                            <th class="align-middle text-center">Support On-Site (hour)</th>
+                                            <th class="align-middle text-center">Price</th>
+                                            <th class="align-middle text-center">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -68,50 +59,24 @@
                                         @endphp
                                         @foreach ($dataLayanan as $item)
                                             <tr>
-                                                <td class="align-middle text-center">{{ $i }}</td>
-                                                <td class="align-middle">{{ $item->package_name }}</td>
-                                                <td class="align-middle text-center">{{ $item->package_type }}</td>
-                                                <td class="align-middle text-center">{{ $item->package_categories }}</td>
-                                                <td class="align-middle text-center">{{ $item->package_speed }} Mbps</td>
-                                                <td class="align-middle text-center">Rp.
-                                                    {{ number_format($item->package_price, 2) }},-</td>
-                                                <td class="align-middle text-center">Rp.
-                                                    {{ number_format($item->retail_package_price) }},-</td>
-                                                <td class="align-middle text-center">Rp.
-                                                    {{ number_format($item->government_package_price) }},-
-                                                </td>
+                                                <td class="align-middle text-center">{{ $item->ServiceId }}</td>
+                                                <td class="align-middle" style="text-align: justify;">
+                                                    {{ $item->ServiceType }}</td>
+                                                <td class="align-middle text-center">{{ $item->ServiceLevel }}</td>
                                                 <td class="align-middle text-center">
-                                                    {{ $item->noted_service ? $item->noted_service : '-' }}</td>
+                                                    {{ $item->NormalDownCeil != null ? $item->NormalDownCeil : '-' }}</td>
                                                 <td class="align-middle text-center">
-                                                    @switch($item->branch_id)
-                                                        @case('020')
-                                                            Medan Multatuli
-                                                        @break
-
-                                                        @case('062')
-                                                            Bali
-                                                        @break
-
-                                                        @default
-                                                            Medan Multatuli
-                                                    @endswitch
-                                                </td>
-                                                @can('AuthMaster')
-                                                    <td class="align-middle">
-                                                        <a href="{{ URL::to('data-layanan/' . $item->id . '/edit') }}"
-                                                            class="btn btn-warning text-white">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <form action="{{ URL::to('data-layanan/' . $item->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger">
-                                                                <i class="fas fa-trash-alt me-1"></i>
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                @endcan
+                                                    {{ $item->NormalDownRate != null ? $item->NormalDownRate : '-' }}</td>
+                                                <td class="align-middle text-center">
+                                                    {{ $item->NormalUpCeil != null ? $item->NormalUpCeil : '-' }}</td>
+                                                <td class="align-middle text-center">
+                                                    {{ $item->NormalUpRate != null ? $item->NormalUpRate : '-' }}</td>
+                                                <td class="align-middle text-center">
+                                                    {{ $item->DownTime != null ? $item->DownTime : '-' }}</td>
+                                                <td class="align-middle text-center">
+                                                    {{ 'Rp. ' . number_format($item->ServiceCharge, 2) }}</td>
+                                                <td class="align-middle text-center">
+                                                    {{ $item->discontinue == 0 ? 'Active' : 'Discontinue' }}</td>
                                             </tr>
                                             @php
                                                 $i++;

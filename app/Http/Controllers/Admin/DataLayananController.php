@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ServicesList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class DataLayananController extends Controller
 {
@@ -30,9 +31,25 @@ class DataLayananController extends Controller
 
         try {
             if (auth()->user()->utype != "AuthMaster") {
-                $datas['dataLayanan'] = ServicesList::where('branch_id', $this->branch_id)->get();
+                try {
+                    $response = Http::withHeaders([
+                        'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc',
+                    ])->get('https://legacy.is5.nusa.net.id/service?branchId=' . $this->branch_id);
+
+                    $datas['dataLayanan'] = json_decode($response->body());
+                } catch (\Throwable $th) {
+                    $datas['dataLayanan'] = [];
+                }
             } else {
-                $datas['dataLayanan'] = ServicesList::all();
+                try {
+                    $response = Http::withHeaders([
+                        'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc',
+                    ])->get('https://legacy.is5.nusa.net.id/service');
+
+                    $datas['dataLayanan'] = json_decode($response->body());
+                } catch (\Throwable $th) {
+                    $datas['dataLayanan'] = [];
+                }
             }
         } catch (\Throwable $th) {
             $datas['dataLayanan'] = [];
