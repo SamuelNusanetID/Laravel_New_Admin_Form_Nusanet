@@ -38,29 +38,18 @@
                                 </h6>
                             </div>
                             <div class="card-body">
-                                @can('AuthMaster')
-                                    <a href="{{ URL::to('data-promo/create') }}" class="btn btn-primary mb-3">
-                                        <i class="fas fa-plus-circle me-1"></i>
-                                        Tambah {{ $titlePage }}
-                                    </a>
-                                @endcan
                                 <table class="table table-bordered" id="dataTableDataPromo" style="width: 100%;">
                                     <thead class="bg-success">
                                         <tr>
-                                            <th class="align-middle text-center">No.</th>
-                                            <th class="align-middle text-center">Kode Promo</th>
-                                            <th class="align-middle text-center">Nama Promo</th>
-                                            <th class="align-middle text-center">Nama Paket</th>
-                                            <th class="align-middle text-center">Jangka Waktu Pembayaran</th>
-                                            {{-- <th class="align-middle text-center">Diskon (%)</th>
-                                            <th class="align-middle text-center">Jumlah Bulan (Bulan)</th>
-                                            <th class="align-middle text-center">Kriteria Promo</th> --}}
+                                            <th class="align-middle text-center">ID</th>
+                                            <th class="align-middle text-center">Promo</th>
                                             <th class="align-middle text-center">Branch</th>
-                                            <th class="align-middle text-center">Tanggal Aktif Promo</th>
-                                            <th class="align-middle text-center">Tanggal Berakhir Promo</th>
-                                            @can('AuthMaster')
-                                                <th class="align-middle text-center"></th>
-                                            @endcan
+                                            <th class="align-middle text-center">Tanggal Mulai</th>
+                                            <th class="align-middle text-center">Tanggal Berakhir</th>
+                                            <th class="align-middle text-center">Deskripsi</th>
+                                            <th class="align-middle text-center">Status</th>
+                                            <th class="align-middle text-center">Created at</th>
+                                            <th class="align-middle text-center">Create by</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -70,15 +59,9 @@
                                         @foreach ($dataPromo as $item)
                                             <tr>
                                                 <td class="align-middle text-center">{{ $i }}</td>
-                                                <td class="align-middle text-center fw-bold">{{ $item->promo_code }}</td>
-                                                <td class="align-middle text-center fw-bold">{{ $item->promo_name }}</td>
-                                                <td class="align-middle">{{ $item->package_name }}</td>
-                                                <td class="align-middle text-center">{{ $item->package_top }}</td>
-                                                {{-- <td class="align-middle text-center">{{ $item->discount_cut }}</td>
-                                                <td class="align-middle text-center">{{ $item->monthly_cut }}</td>
-                                                <td class="align-middle text-center">{{ $item->monthly_cut_status }}</td> --}}
+                                                <td class="align-middle text-center">{{ $item->nama_promo }}</td>
                                                 <td class="align-middle text-center">
-                                                    @switch($item->branch_id)
+                                                    @switch($item->branchId)
                                                         @case('020')
                                                             Medan Multatuli
                                                         @break
@@ -91,23 +74,18 @@
                                                             Medan Multatuli
                                                     @endswitch
                                                 </td>
-                                                <td class="align-middle text-center">{{ $item->activate_date }}</td>
-                                                <td class="align-middle text-center">{{ $item->expired_date }}</td>
-                                                @can('AuthMaster')
-                                                    <td class="align-middle text-center">
-                                                        <a href="{{ URL::to('data-promo/' . $item->id . '/edit') }}"
-                                                            class="btn btn-warning text-white">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <form action="{{ URL::to('data-promo/' . $item->id) }}" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger">
-                                                                <i class="fas fa-trash-alt me-1"></i>
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                @endcan
+                                                <td class="align-middle text-center">{{ $item->from }}</td>
+                                                <td class="align-middle">{{ $item->to }}</td>
+                                                <td class="align-middle">{{ $item->description }}</td>
+                                                <td class="align-middle text-center">
+                                                    @if ($item->active)
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    @else
+                                                        <span class="badge badge-danger">Tidak Aktif</span>
+                                                    @endif
+                                                </td>
+                                                <td class="align-middle text-center">{{ $item->inserttime }}</td>
+                                                <td class="align-middle text-center">{{ $item->insertby }}</td>
                                             </tr>
                                             @php
                                                 $i++;

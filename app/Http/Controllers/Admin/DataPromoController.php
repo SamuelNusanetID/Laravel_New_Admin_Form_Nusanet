@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PromoList;
 use App\Models\ServicesList;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class DataPromoController extends Controller
 {
@@ -31,9 +33,39 @@ class DataPromoController extends Controller
 
         try {
             if (auth()->user()->utype != 'AuthMaster') {
-                $datas['dataPromo'] = PromoList::where('branch_id', $this->branch_id)->get();
+                try {
+                    $response = Http::withHeaders([
+                        'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc',
+                    ])->get('https://legacy.is5.nusa.net.id/promo?branchId=' . $this->branch_id . '&to=' . Date('Y-m-d') . '&active=1');
+
+                    $datas['dataPromo'] = json_decode($response->body());
+                    foreach ($datas['dataPromo'] as $key => $value) {
+                        $responseKaryawan = Http::withHeaders([
+                            'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
+                        ])->get('https://legacy.is5.nusa.net.id/employees/' . $value->insertby);
+
+                        $datas['dataPromo'][$key]->insertby = json_decode($responseKaryawan->body())->name;
+                    }
+                } catch (\Throwable $th) {
+                    $datas['dataPromo'] = [];
+                }
             } else {
-                $datas['dataPromo'] = PromoList::all();
+                try {
+                    $response = Http::withHeaders([
+                        'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc',
+                    ])->get('https://legacy.is5.nusa.net.id/promo');
+
+                    $datas['dataPromo'] = json_decode($response->body());
+                    foreach ($datas['dataPromo'] as $key => $value) {
+                        $responseKaryawan = Http::withHeaders([
+                            'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
+                        ])->get('https://legacy.is5.nusa.net.id/employees/' . $value->insertby);
+
+                        $datas['dataPromo'][$key]->insertby = json_decode($responseKaryawan->body())->name;
+                    }
+                } catch (\Throwable $th) {
+                    $datas['dataPromo'] = [];
+                }
             }
         } catch (\Throwable $th) {
             $datas['dataPromo'] = [];
