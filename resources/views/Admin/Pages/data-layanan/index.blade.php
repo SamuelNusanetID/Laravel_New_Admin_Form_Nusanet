@@ -59,7 +59,7 @@
                                         @endphp
                                         @foreach ($dataLayanan as $item)
                                             <tr>
-                                                <td class="align-middle text-center">{{ $item->ServiceId }}</td>
+                                                <td class="align-middle text-center">{{ $item->s_ServiceId }}</td>
                                                 <td class="align-middle" style="text-align: justify;">
                                                     {{ $item->ServiceType }}</td>
                                                 <td class="align-middle text-center">{{ $item->ServiceLevel }}</td>

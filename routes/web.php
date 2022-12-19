@@ -31,8 +31,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('data-pelanggan/{id_pelanggan}/download', [DataPelangganController::class, 'downloadPDFCustomer']);
     Route::get('data-pelanggan/{id_pelanggan}/assign-pic', [DataPelangganController::class, 'AssignToView']);
     Route::post('data-pelanggan/{id_pelanggan}/assign-pic', [DataPelangganController::class, 'AssignToFunction']);
-    Route::resource('data-layanan', DataLayananController::class)->middleware('level:AuthMaster,AuthCRO,AuthSalesManager,AuthSales');
-    Route::resource('data-promo', DataPromoController::class)->middleware('level:AuthMaster,AuthCRO,AuthSalesManager,AuthSales');
+    Route::resource('data-layanan', DataLayananController::class)->middleware('level:AuthMaster,AuthCRO,AuthSalesManager,AuthSales')->except(['create', 'store', 'show', 'edit', 'update', 'destroy']);
+    Route::resource('data-promo', DataPromoController::class)->middleware('level:AuthMaster,AuthCRO,AuthSalesManager,AuthSales')->except(['create', 'store', 'show', 'edit', 'update', 'destroy']);
     Route::resource('data-pengguna', DataPenggunaController::class)->middleware('level:AuthMaster');
     Route::get('profil-saya', [ProfileController::class, 'index']);
     Route::post('profil-saya', [ProfileController::class, 'updateProfile']);

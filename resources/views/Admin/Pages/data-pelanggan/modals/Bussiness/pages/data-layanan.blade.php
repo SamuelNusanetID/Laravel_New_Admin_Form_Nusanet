@@ -26,12 +26,12 @@
                         <label for="{{ $key }}" class="col-sm-6 col-form-label">Jangka Waktu Pembayaran</label>
                         <div class="col-sm-6">
                             <textarea class="form-control-plaintext" id="{{ $key }}" name="{{ $key }}" rows="3" readonly
-                                style="text-align: justify;">{{ $value }}</textarea>
+                                style="text-align: justify;">{{ $value }} Bulan</textarea>
                         </div>
                     </div>
-                @elseif ($key == 'package_promo')
+                @elseif ($key == 'package_promo_name')
                     <div class="mb-3 row">
-                        <label for="{{ $key }}" class="col-sm-6 col-form-label">Kode Promo</label>
+                        <label for="{{ $key }}" class="col-sm-6 col-form-label">Nama Promo</label>
                         <div class="col-sm-6">
                             <textarea class="form-control-plaintext" id="{{ $key }}" name="{{ $key }}" rows="3" readonly
                                 style="text-align: justify;">{{ $value }}</textarea>

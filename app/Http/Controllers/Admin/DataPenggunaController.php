@@ -43,8 +43,8 @@ class DataPenggunaController extends Controller
         foreach ($fetchDataPengguna as $key => $value) {
             try {
                 $response = Http::withHeaders([
-                    'X-Api-Key' => 'lfHvJBMHkoqp93YR:4d059474ecb431eefb25c23383ea65fc'
-                ])->get('https://legacy.is5.nusa.net.id/employees/' . $value->under_employee_id);
+                    'X-Api-Key' => env('API_KEY_IS')
+                ])->get(env('API_URL_IS') . 'employees/' . $value->under_employee_id);
                 $resultJSON = json_decode($response->body());
 
                 $fetchDataPengguna[$key]->pic_name = $resultJSON->name;

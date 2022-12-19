@@ -513,12 +513,24 @@
                                                             Paket</label>
                                                         <div class="col-sm-6">
                                                             <div class="input-group mb-3">
-                                                                <input type="text" class="form-control"
-                                                                    placeholder="Masukkan kode promo..." id="package_promo"
+                                                                <select class="form-select"
                                                                     name="data[{{ $packageIDX - 1 }}][package_promo]"
-                                                                    value="{{ old('data[' . $packageIDX - 1 . '][package_promo]', isset(json_decode($dataPelanggan->service->service_package)[$key]->package_promo) ? json_decode($dataPelanggan->service->service_package)[$key]->package_promo : null) }}">
-                                                                <button class="btn btn-outline-success" type="button"
-                                                                    id="btnSubmitPromo">Ambil Promo</button>
+                                                                    id="package_promo">
+                                                                    <option disabled selected>Pilih Promo...</option>
+                                                                    @foreach ($dataPromo as $promos)
+                                                                        @if (old(
+                                                                            'data[' . $packageIDX - 1 . '][package_promo]',
+                                                                            isset(json_decode($dataPelanggan->service->service_package)[$key]->package_promo)
+                                                                                ? json_decode($dataPelanggan->service->service_package)[$key]->package_promo
+                                                                                : null) == $key)
+                                                                            <option value="{{ $promos['id'] }}" selected>
+                                                                                {{ $promos['nama_promo'] }}</option>
+                                                                        @else
+                                                                            <option value="{{ $promos['id'] }}">
+                                                                                {{ $promos['nama_promo'] }}</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -561,12 +573,24 @@
                                                             Paket</label>
                                                         <div class="col-sm-6">
                                                             <div class="input-group mb-3">
-                                                                <input type="text" class="form-control-plaintext"
-                                                                    placeholder="Masukkan kode promo..." id="package_promo"
+                                                                <select class="form-select"
                                                                     name="data[{{ $packageIDX - 1 }}][package_promo]"
-                                                                    value="{{ old('data[' . $packageIDX - 1 . '][package_promo]', isset(json_decode($dataPelanggan->service->service_package)[$key]->package_promo) ? json_decode($dataPelanggan->service->service_package)[$key]->package_promo : null) }}">
-                                                                <button class="btn btn-outline-success" type="button"
-                                                                    id="btnSubmitPromo" disabled>Ambil Promo</button>
+                                                                    id="package_promo">
+                                                                    <option disabled selected>Pilih Promo...</option>
+                                                                    @foreach ($dataPromo as $promos)
+                                                                        @if (old(
+                                                                            'data[' . $packageIDX - 1 . '][package_promo]',
+                                                                            isset(json_decode($dataPelanggan->service->service_package)[$key]->package_promo)
+                                                                                ? json_decode($dataPelanggan->service->service_package)[$key]->package_promo
+                                                                                : null) == $key)
+                                                                            <option value="{{ $promos['id'] }}" selected>
+                                                                                {{ $promos['nama_promo'] }}</option>
+                                                                        @else
+                                                                            <option value="{{ $promos['id'] }}">
+                                                                                {{ $promos['nama_promo'] }}</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -730,17 +754,6 @@
             </div>
         </div>
     </div>
-
-    @php
-        date_default_timezone_set('Asia/Jakarta');
-
-        $fetchAllDataPromo = $dataPromo->toArray();
-        foreach ($fetchAllDataPromo as $key => $value) {
-            if (!(date('Y-m-d H:i:s') > $value['activate_date'] && date('Y-m-d H:i:s') < $value['expired_date'])) {
-                unset($fetchAllDataPromo[$key]);
-            }
-        }
-    @endphp
 @endsection
 
 @section('addonjs')
@@ -783,86 +796,7 @@
                     hargaUntukHitungan = $(this).val() * hargaRealPaket;
                 }
             });
-
-            const date = new Date;
-            $('#btnSubmitPromo').on('click', () => {
-                var isError = false;
-                var statusPaket = "Bulanan";
-                const PromoArr = {!! json_encode($fetchAllDataPromo) !!};
-                const kodePromo = $('#package_promo').val();
-                const namaPaket = $('#package_name').val();
-                const hargaPaket = hargaUntukHitungan;
-                const jangkaWaktuPaket = $('#package_top').val();
-                if (jangkaWaktuPaket >= 12) {
-                    statusPaket = "Tahunan";
-                }
-                const arrNamaPaket = namaPaket.split(' ');
-
-                if (PromoArr.length > 0) {
-                    PromoArr.forEach(element => {
-                        if (element.promo_code == kodePromo) {
-                            if (isSame(namaPaket, element.package_name) && element.package_top ==
-                                statusPaket) {
-                                isError = false;
-
-                                var persenDiscount = element.discount_cut != '-' ? element
-                                    .discount_cut / 100 : 0;
-
-                                if (element.monthly_cut_status == "Penambahan") {
-                                    $('#package_price').val(value(hargaPaket - (hargaPaket *
-                                        persenDiscount)));
-                                    hargaUntukHitungan = hargaPaket - (hargaPaket *
-                                        persenDiscount);
-                                    $('#package_top').val((jangkaWaktuPaket + element
-                                        .monthly_cut));
-                                } else if (element.monthly_cut_status == "Pengurangan") {
-                                    if (jangkaWaktuPaket <= element
-                                        .monthly_cut) {
-                                        isError = true;
-                                    } else {
-                                        $('#package_price').val(value(hargaPaket - (hargaPaket *
-                                            persenDiscount)));
-                                        hargaUntukHitungan = hargaPaket - (hargaPaket *
-                                            persenDiscount);
-                                        $('#package_top').val((jangkaWaktuPaket -
-                                            element
-                                            .monthly_cut));
-                                    }
-                                } else {
-                                    if (jangkaWaktuPaket <= element
-                                        .monthly_cut) {
-                                        isError = true;
-                                    } else {
-                                        $('#package_price').val(value(hargaPaket - (hargaPaket *
-                                            persenDiscount)));
-                                        hargaUntukHitungan = hargaPaket - (hargaPaket *
-                                            persenDiscount);
-                                        $('#package_top').val((jangkaWaktuPaket -
-                                            element
-                                            .monthly_cut));
-                                    }
-                                }
-                            } else {
-                                isError = true;
-                            }
-                        } else {
-                            isError = true;
-                        }
-                    });
-                } else {
-                    isError = true;
-                }
-
-                if (isError) {
-                    alert('Maaf, Kode Promo Tidak Ditemukan!, Silahkan coba lagi.');
-                }
-            })
         });
-
-        function isSame(str1, str2) {
-            var str1Arr = str1.split(' ');
-            return str1Arr[0] + ' ' + str1Arr[1] == str2;
-        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
